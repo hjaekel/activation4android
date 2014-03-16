@@ -25,51 +25,31 @@
 
 package sun.awt.datatransfer;
 
-import java.awt.AWTError;
-import java.awt.EventQueue;
-import java.awt.Image;
-import java.awt.Graphics;
-
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.FlavorMap;
-import java.awt.datatransfer.FlavorTable;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FilePermission;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Reader;
 import java.io.SequenceInputStream;
-import java.io.StringReader;
-
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URI;
-import java.net.URISyntaxException;
-
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.security.ProtectionDomain;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -79,39 +59,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.Set;
-import java.util.Stack;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
-import sun.util.logging.PlatformLogger;
-
-import sun.awt.AppContext;
-import sun.awt.SunToolkit;
-
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.RenderedImage;
-import java.awt.image.WritableRaster;
-import java.awt.image.ColorModel;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.ImageReadParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.ImageTypeSpecifier;
-
-import javax.imageio.spi.ImageWriterSpi;
-
-import javax.imageio.stream.ImageInputStream;
-import javax.imageio.stream.ImageOutputStream;
-
-import sun.awt.image.ImageRepresentation;
-import sun.awt.image.ToolkitImage;
-
-import java.io.FilePermission;
+import and.awt.datatransfer.DataFlavor;
+import and.awt.datatransfer.Transferable;
+import and.awt.datatransfer.UnsupportedFlavorException;
 
 
 /**
@@ -238,7 +193,7 @@ public abstract class DataTransferer {
      */
     private static DataTransferer transferer;
 
-    private static final PlatformLogger dtLog = PlatformLogger.getLogger("sun.awt.datatransfer.DataTransfer");
+//    private static final PlatformLogger dtLog = PlatformLogger.getLogger("sun.awt.datatransfer.DataTransfer");
 
     static {
         Class tCharArrayClass = null, tByteArrayClass = null;
@@ -290,64 +245,64 @@ public abstract class DataTransferer {
      * that in a headless environment, there may be no DataTransferer instance;
      * instead, null will be returned.
      */
-    public static DataTransferer getInstance() {
-        synchronized (DataTransferer.class) {
-            if (transferer == null) {
-                final String name = SunToolkit.getDataTransfererClassName();
-                if (name != null) {
-                    PrivilegedAction<DataTransferer> action = new PrivilegedAction<DataTransferer>()
-                    {
-                      public DataTransferer run() {
-                          Class cls = null;
-                          Method method = null;
-                          DataTransferer ret = null;
-
-                          try {
-                              cls = Class.forName(name);
-                          } catch (ClassNotFoundException e) {
-                              ClassLoader cl = ClassLoader.
-                                  getSystemClassLoader();
-                              if (cl != null) {
-                                  try {
-                                      cls = cl.loadClass(name);
-                                  } catch (ClassNotFoundException ee) {
-                                      ee.printStackTrace();
-                                      throw new AWTError("DataTransferer not found: " + name);
-                                  }
-                              }
-                          }
-                          if (cls != null) {
-                              try {
-                                  method = cls.getDeclaredMethod("getInstanceImpl");
-                                  method.setAccessible(true);
-                              } catch (NoSuchMethodException e) {
-                                  e.printStackTrace();
-                                  throw new AWTError("Cannot instantiate DataTransferer: " + name);
-                              } catch (SecurityException e) {
-                                  e.printStackTrace();
-                                  throw new AWTError("Access is denied for DataTransferer: " + name);
-                              }
-                          }
-                          if (method != null) {
-                              try {
-                                  ret = (DataTransferer) method.invoke(null);
-                              } catch (InvocationTargetException e) {
-                                  e.printStackTrace();
-                                  throw new AWTError("Cannot instantiate DataTransferer: " + name);
-                              } catch (IllegalAccessException e) {
-                                  e.printStackTrace();
-                                  throw new AWTError("Cannot access DataTransferer: " + name);
-                              }
-                          }
-                          return ret;
-                      }
-                    };
-                    transferer = AccessController.doPrivileged(action);
-                }
-            }
-        }
-        return transferer;
-    }
+//    public static DataTransferer getInstance() {
+//        synchronized (DataTransferer.class) {
+//            if (transferer == null) {
+//                final String name = SunToolkit.getDataTransfererClassName();
+//                if (name != null) {
+//                    PrivilegedAction<DataTransferer> action = new PrivilegedAction<DataTransferer>()
+//                    {
+//                      public DataTransferer run() {
+//                          Class cls = null;
+//                          Method method = null;
+//                          DataTransferer ret = null;
+//
+//                          try {
+//                              cls = Class.forName(name);
+//                          } catch (ClassNotFoundException e) {
+//                              ClassLoader cl = ClassLoader.
+//                                  getSystemClassLoader();
+//                              if (cl != null) {
+//                                  try {
+//                                      cls = cl.loadClass(name);
+//                                  } catch (ClassNotFoundException ee) {
+//                                      ee.printStackTrace();
+//                                      throw new AWTError("DataTransferer not found: " + name);
+//                                  }
+//                              }
+//                          }
+//                          if (cls != null) {
+//                              try {
+//                                  method = cls.getDeclaredMethod("getInstanceImpl");
+//                                  method.setAccessible(true);
+//                              } catch (NoSuchMethodException e) {
+//                                  e.printStackTrace();
+//                                  throw new AWTError("Cannot instantiate DataTransferer: " + name);
+//                              } catch (SecurityException e) {
+//                                  e.printStackTrace();
+//                                  throw new AWTError("Access is denied for DataTransferer: " + name);
+//                              }
+//                          }
+//                          if (method != null) {
+//                              try {
+//                                  ret = (DataTransferer) method.invoke(null);
+//                              } catch (InvocationTargetException e) {
+//                                  e.printStackTrace();
+//                                  throw new AWTError("Cannot instantiate DataTransferer: " + name);
+//                              } catch (IllegalAccessException e) {
+//                                  e.printStackTrace();
+//                                  throw new AWTError("Cannot access DataTransferer: " + name);
+//                              }
+//                          }
+//                          return ret;
+//                      }
+//                    };
+//                    transferer = AccessController.doPrivileged(action);
+//                }
+//            }
+//        }
+//        return transferer;
+//    }
 
     /**
      * Converts an arbitrary text encoding to its canonical name.
@@ -398,11 +353,11 @@ public abstract class DataTransferer {
      * "text".
      */
     public static boolean doesSubtypeSupportCharset(DataFlavor flavor) {
-        if (dtLog.isLoggable(PlatformLogger.FINE)) {
-            if (!"text".equals(flavor.getPrimaryType())) {
-                dtLog.fine("Assertion (\"text\".equals(flavor.getPrimaryType())) failed");
-            }
-        }
+//        if (dtLog.isLoggable(PlatformLogger.FINE)) {
+//            if (!"text".equals(flavor.getPrimaryType())) {
+//                dtLog.fine("Assertion (\"text\".equals(flavor.getPrimaryType())) failed");
+//            }
+//        }
 
         String subType = flavor.getSubType();
         if (subType == null) {
@@ -530,44 +485,44 @@ public abstract class DataTransferer {
     /**
      * Converts a FlavorMap to a FlavorTable.
      */
-    public static FlavorTable adaptFlavorMap(final FlavorMap map) {
-        if (map instanceof FlavorTable) {
-            return (FlavorTable)map;
-        }
-
-        return new FlavorTable() {
-                public Map getNativesForFlavors(DataFlavor[] flavors) {
-                    return map.getNativesForFlavors(flavors);
-                }
-                public Map getFlavorsForNatives(String[] natives) {
-                    return map.getFlavorsForNatives(natives);
-                }
-                public List getNativesForFlavor(DataFlavor flav) {
-                    Map natives =
-                        getNativesForFlavors(new DataFlavor[] { flav } );
-                    String nat = (String)natives.get(flav);
-                    if (nat != null) {
-                        List list = new ArrayList(1);
-                        list.add(nat);
-                        return list;
-                    } else {
-                        return Collections.EMPTY_LIST;
-                    }
-                }
-                public List getFlavorsForNative(String nat) {
-                    Map flavors =
-                        getFlavorsForNatives(new String[] { nat } );
-                    DataFlavor flavor = (DataFlavor)flavors.get(nat);
-                    if (flavor != null) {
-                        List list = new ArrayList(1);
-                        list.add(flavor);
-                        return list;
-                    } else {
-                        return Collections.EMPTY_LIST;
-                    }
-                }
-            };
-    }
+//    public static FlavorTable adaptFlavorMap(final FlavorMap map) {
+//        if (map instanceof FlavorTable) {
+//            return (FlavorTable)map;
+//        }
+//
+//        return new FlavorTable() {
+//                public Map getNativesForFlavors(DataFlavor[] flavors) {
+//                    return map.getNativesForFlavors(flavors);
+//                }
+//                public Map getFlavorsForNatives(String[] natives) {
+//                    return map.getFlavorsForNatives(natives);
+//                }
+//                public List getNativesForFlavor(DataFlavor flav) {
+//                    Map natives =
+//                        getNativesForFlavors(new DataFlavor[] { flav } );
+//                    String nat = (String)natives.get(flav);
+//                    if (nat != null) {
+//                        List list = new ArrayList(1);
+//                        list.add(nat);
+//                        return list;
+//                    } else {
+//                        return Collections.EMPTY_LIST;
+//                    }
+//                }
+//                public List getFlavorsForNative(String nat) {
+//                    Map flavors =
+//                        getFlavorsForNatives(new String[] { nat } );
+//                    DataFlavor flavor = (DataFlavor)flavors.get(nat);
+//                    if (flavor != null) {
+//                        List list = new ArrayList(1);
+//                        list.add(flavor);
+//                        return list;
+//                    } else {
+//                        return Collections.EMPTY_LIST;
+//                    }
+//                }
+//            };
+//    }
 
     /**
      * Returns the default Unicode encoding for the platform. The encoding
@@ -649,14 +604,14 @@ public abstract class DataTransferer {
      * The map keys are sorted according to the native formats preference
      * order.
      */
-    public SortedMap getFormatsForTransferable(Transferable contents,
-                                               FlavorTable map) {
-        DataFlavor[] flavors = contents.getTransferDataFlavors();
-        if (flavors == null) {
-            return new TreeMap();
-        }
-        return getFormatsForFlavors(flavors, map);
-    }
+//    public SortedMap getFormatsForTransferable(Transferable contents,
+//                                               FlavorTable map) {
+//        DataFlavor[] flavors = contents.getTransferDataFlavors();
+//        if (flavors == null) {
+//            return new TreeMap();
+//        }
+//        return getFormatsForFlavors(flavors, map);
+//    }
 
     /**
      * Returns a Map whose keys are all of the possible formats into which data
@@ -667,10 +622,10 @@ public abstract class DataTransferer {
      * The map keys are sorted according to the native formats preference
      * order.
      */
-    public SortedMap getFormatsForFlavor(DataFlavor flavor, FlavorTable map) {
-        return getFormatsForFlavors(new DataFlavor[] { flavor },
-                                    map);
-    }
+//    public SortedMap getFormatsForFlavor(DataFlavor flavor, FlavorTable map) {
+//        return getFormatsForFlavors(new DataFlavor[] { flavor },
+//                                    map);
+//    }
 
     /**
      * Returns a Map whose keys are all of the possible formats into which data
@@ -686,90 +641,90 @@ public abstract class DataTransferer {
      *            DataFlavors and data formats
      * @throws NullPointerException if flavors or map is <code>null</code>
      */
-    public SortedMap getFormatsForFlavors(DataFlavor[] flavors, FlavorTable map) {
-        Map formatMap = new HashMap(flavors.length);
-        Map textPlainMap = new HashMap(flavors.length);
-        // Maps formats to indices that will be used to sort the formats
-        // according to the preference order.
-        // Larger index value corresponds to the more preferable format.
-        Map indexMap = new HashMap(flavors.length);
-        Map textPlainIndexMap = new HashMap(flavors.length);
-
-        int currentIndex = 0;
-
-        // Iterate backwards so that preferred DataFlavors are used over
-        // other DataFlavors. (See javadoc for
-        // Transferable.getTransferDataFlavors.)
-        for (int i = flavors.length - 1; i >= 0; i--) {
-            DataFlavor flavor = flavors[i];
-            if (flavor == null) continue;
-
-            // Don't explicitly test for String, since it is just a special
-            // case of Serializable
-            if (flavor.isFlavorTextType() ||
-                flavor.isFlavorJavaFileListType() ||
-                DataFlavor.imageFlavor.equals(flavor) ||
-                flavor.isRepresentationClassSerializable() ||
-                flavor.isRepresentationClassInputStream() ||
-                flavor.isRepresentationClassRemote())
-            {
-                List natives = map.getNativesForFlavor(flavor);
-
-                currentIndex += natives.size();
-
-                for (Iterator iter = natives.iterator(); iter.hasNext(); ) {
-                    Long lFormat =
-                        getFormatForNativeAsLong((String)iter.next());
-                    Integer index = Integer.valueOf(currentIndex--);
-
-                    formatMap.put(lFormat, flavor);
-                    indexMap.put(lFormat, index);
-
-                    // SystemFlavorMap.getNativesForFlavor will return
-                    // text/plain natives for all text/*. While this is good
-                    // for a single text/* flavor, we would prefer that
-                    // text/plain native data come from a text/plain flavor.
-                    if (("text".equals(flavor.getPrimaryType()) &&
-                         "plain".equals(flavor.getSubType())) ||
-                        flavor.equals(DataFlavor.stringFlavor))
-                    {
-                        textPlainMap.put(lFormat, flavor);
-                        textPlainIndexMap.put(lFormat, index);
-                    }
-                }
-
-                currentIndex += natives.size();
-            }
-        }
-
-        formatMap.putAll(textPlainMap);
-        indexMap.putAll(textPlainIndexMap);
-
-        // Sort the map keys according to the formats preference order.
-        Comparator comparator =
-            new IndexOrderComparator(indexMap, IndexedComparator.SELECT_WORST);
-        SortedMap sortedMap = new TreeMap(comparator);
-        sortedMap.putAll(formatMap);
-
-        return sortedMap;
-    }
+//    public SortedMap getFormatsForFlavors(DataFlavor[] flavors, FlavorTable map) {
+//        Map formatMap = new HashMap(flavors.length);
+//        Map textPlainMap = new HashMap(flavors.length);
+//        // Maps formats to indices that will be used to sort the formats
+//        // according to the preference order.
+//        // Larger index value corresponds to the more preferable format.
+//        Map indexMap = new HashMap(flavors.length);
+//        Map textPlainIndexMap = new HashMap(flavors.length);
+//
+//        int currentIndex = 0;
+//
+//        // Iterate backwards so that preferred DataFlavors are used over
+//        // other DataFlavors. (See javadoc for
+//        // Transferable.getTransferDataFlavors.)
+//        for (int i = flavors.length - 1; i >= 0; i--) {
+//            DataFlavor flavor = flavors[i];
+//            if (flavor == null) continue;
+//
+//            // Don't explicitly test for String, since it is just a special
+//            // case of Serializable
+//            if (flavor.isFlavorTextType() ||
+//                flavor.isFlavorJavaFileListType() ||
+//                DataFlavor.imageFlavor.equals(flavor) ||
+//                flavor.isRepresentationClassSerializable() ||
+//                flavor.isRepresentationClassInputStream() ||
+//                flavor.isRepresentationClassRemote())
+//            {
+//                List natives = map.getNativesForFlavor(flavor);
+//
+//                currentIndex += natives.size();
+//
+//                for (Iterator iter = natives.iterator(); iter.hasNext(); ) {
+//                    Long lFormat =
+//                        getFormatForNativeAsLong((String)iter.next());
+//                    Integer index = Integer.valueOf(currentIndex--);
+//
+//                    formatMap.put(lFormat, flavor);
+//                    indexMap.put(lFormat, index);
+//
+//                    // SystemFlavorMap.getNativesForFlavor will return
+//                    // text/plain natives for all text/*. While this is good
+//                    // for a single text/* flavor, we would prefer that
+//                    // text/plain native data come from a text/plain flavor.
+//                    if (("text".equals(flavor.getPrimaryType()) &&
+//                         "plain".equals(flavor.getSubType())) ||
+//                        flavor.equals(DataFlavor.stringFlavor))
+//                    {
+//                        textPlainMap.put(lFormat, flavor);
+//                        textPlainIndexMap.put(lFormat, index);
+//                    }
+//                }
+//
+//                currentIndex += natives.size();
+//            }
+//        }
+//
+//        formatMap.putAll(textPlainMap);
+//        indexMap.putAll(textPlainIndexMap);
+//
+//        // Sort the map keys according to the formats preference order.
+//        Comparator comparator =
+//            new IndexOrderComparator(indexMap, IndexedComparator.SELECT_WORST);
+//        SortedMap sortedMap = new TreeMap(comparator);
+//        sortedMap.putAll(formatMap);
+//
+//        return sortedMap;
+//    }
 
     /**
      * Reduces the Map output for the root function to an array of the
      * Map's keys.
      */
-    public long[] getFormatsForTransferableAsArray(Transferable contents,
-                                                   FlavorTable map) {
-        return keysToLongArray(getFormatsForTransferable(contents, map));
-    }
-    public long[] getFormatsForFlavorAsArray(DataFlavor flavor,
-                                             FlavorTable map) {
-        return keysToLongArray(getFormatsForFlavor(flavor, map));
-    }
-    public long[] getFormatsForFlavorsAsArray(DataFlavor[] flavors,
-                                              FlavorTable map) {
-        return keysToLongArray(getFormatsForFlavors(flavors, map));
-    }
+//    public long[] getFormatsForTransferableAsArray(Transferable contents,
+//                                                   FlavorTable map) {
+//        return keysToLongArray(getFormatsForTransferable(contents, map));
+//    }
+//    public long[] getFormatsForFlavorAsArray(DataFlavor flavor,
+//                                             FlavorTable map) {
+//        return keysToLongArray(getFormatsForFlavor(flavor, map));
+//    }
+//    public long[] getFormatsForFlavorsAsArray(DataFlavor[] flavors,
+//                                              FlavorTable map) {
+//        return keysToLongArray(getFormatsForFlavors(flavors, map));
+//    }
 
     /**
      * Returns a Map whose keys are all of the possible DataFlavors into which
@@ -777,9 +732,9 @@ public abstract class DataTransferer {
      * is the format in which the Clipboard or dropped data should be requested
      * when converting to the DataFlavor.
      */
-    public Map getFlavorsForFormat(long format, FlavorTable map) {
-        return getFlavorsForFormats(new long[] { format }, map);
-    }
+//    public Map getFlavorsForFormat(long format, FlavorTable map) {
+//        return getFlavorsForFormats(new long[] { format }, map);
+//    }
 
     /**
      * Returns a Map whose keys are all of the possible DataFlavors into which
@@ -787,79 +742,79 @@ public abstract class DataTransferer {
      * is the format in which the Clipboard or dropped data should be requested
      * when converting to the DataFlavor.
      */
-    public Map getFlavorsForFormats(long[] formats, FlavorTable map) {
-        Map flavorMap = new HashMap(formats.length);
-        Set mappingSet = new HashSet(formats.length);
-        Set flavorSet = new HashSet(formats.length);
-
-        // First step: build flavorSet, mappingSet and initial flavorMap
-        // flavorSet  - the set of all the DataFlavors into which
-        //              data in the specified formats can be translated;
-        // mappingSet - the set of all the mappings from the specified formats
-        //              into any DataFlavor;
-        // flavorMap  - after this step, this map maps each of the DataFlavors
-        //              from flavorSet to any of the specified formats.
-        for (int i = 0; i < formats.length; i++) {
-            long format = formats[i];
-            String nat = getNativeForFormat(format);
-            List flavors = map.getFlavorsForNative(nat);
-
-            for (Iterator iter = flavors.iterator(); iter.hasNext(); ) {
-                DataFlavor flavor = (DataFlavor)iter.next();
-
-                // Don't explicitly test for String, since it is just a special
-                // case of Serializable
-                if (flavor.isFlavorTextType() ||
-                    flavor.isFlavorJavaFileListType() ||
-                    DataFlavor.imageFlavor.equals(flavor) ||
-                    flavor.isRepresentationClassSerializable() ||
-                    flavor.isRepresentationClassInputStream() ||
-                    flavor.isRepresentationClassRemote())
-                {
-                    Long lFormat = Long.valueOf(format);
-                    Object mapping =
-                        DataTransferer.createMapping(lFormat, flavor);
-                    flavorMap.put(flavor, lFormat);
-                    mappingSet.add(mapping);
-                    flavorSet.add(flavor);
-                }
-            }
-        }
-
-        // Second step: for each DataFlavor try to figure out which of the
-        // specified formats is the best to translate to this flavor.
-        // Then map each flavor to the best format.
-        // For the given flavor, FlavorTable indicates which native will
-        // best reflect data in the specified flavor to the underlying native
-        // platform. We assume that this native is the best to translate
-        // to this flavor.
-        // Note: FlavorTable allows one-way mappings, so we can occasionally
-        // map a flavor to the format for which the corresponding
-        // format-to-flavor mapping doesn't exist. For this reason we have built
-        // a mappingSet of all format-to-flavor mappings for the specified formats
-        // and check if the format-to-flavor mapping exists for the
-        // (flavor,format) pair being added.
-        for (Iterator flavorIter = flavorSet.iterator();
-             flavorIter.hasNext(); ) {
-            DataFlavor flavor = (DataFlavor)flavorIter.next();
-
-            List natives = map.getNativesForFlavor(flavor);
-
-            for (Iterator nativeIter = natives.iterator();
-                 nativeIter.hasNext(); ) {
-                Long lFormat =
-                    getFormatForNativeAsLong((String)nativeIter.next());
-                Object mapping = DataTransferer.createMapping(lFormat, flavor);
-
-                if (mappingSet.contains(mapping)) {
-                    flavorMap.put(flavor, lFormat);
-                    break;
-                }
-            }
-        }
-
-        return flavorMap;
-    }
+//    public Map getFlavorsForFormats(long[] formats, FlavorTable map) {
+//        Map flavorMap = new HashMap(formats.length);
+//        Set mappingSet = new HashSet(formats.length);
+//        Set flavorSet = new HashSet(formats.length);
+//
+//        // First step: build flavorSet, mappingSet and initial flavorMap
+//        // flavorSet  - the set of all the DataFlavors into which
+//        //              data in the specified formats can be translated;
+//        // mappingSet - the set of all the mappings from the specified formats
+//        //              into any DataFlavor;
+//        // flavorMap  - after this step, this map maps each of the DataFlavors
+//        //              from flavorSet to any of the specified formats.
+//        for (int i = 0; i < formats.length; i++) {
+//            long format = formats[i];
+//            String nat = getNativeForFormat(format);
+//            List flavors = map.getFlavorsForNative(nat);
+//
+//            for (Iterator iter = flavors.iterator(); iter.hasNext(); ) {
+//                DataFlavor flavor = (DataFlavor)iter.next();
+//
+//                // Don't explicitly test for String, since it is just a special
+//                // case of Serializable
+//                if (flavor.isFlavorTextType() ||
+//                    flavor.isFlavorJavaFileListType() ||
+//                    DataFlavor.imageFlavor.equals(flavor) ||
+//                    flavor.isRepresentationClassSerializable() ||
+//                    flavor.isRepresentationClassInputStream() ||
+//                    flavor.isRepresentationClassRemote())
+//                {
+//                    Long lFormat = Long.valueOf(format);
+//                    Object mapping =
+//                        DataTransferer.createMapping(lFormat, flavor);
+//                    flavorMap.put(flavor, lFormat);
+//                    mappingSet.add(mapping);
+//                    flavorSet.add(flavor);
+//                }
+//            }
+//        }
+//
+//        // Second step: for each DataFlavor try to figure out which of the
+//        // specified formats is the best to translate to this flavor.
+//        // Then map each flavor to the best format.
+//        // For the given flavor, FlavorTable indicates which native will
+//        // best reflect data in the specified flavor to the underlying native
+//        // platform. We assume that this native is the best to translate
+//        // to this flavor.
+//        // Note: FlavorTable allows one-way mappings, so we can occasionally
+//        // map a flavor to the format for which the corresponding
+//        // format-to-flavor mapping doesn't exist. For this reason we have built
+//        // a mappingSet of all format-to-flavor mappings for the specified formats
+//        // and check if the format-to-flavor mapping exists for the
+//        // (flavor,format) pair being added.
+//        for (Iterator flavorIter = flavorSet.iterator();
+//             flavorIter.hasNext(); ) {
+//            DataFlavor flavor = (DataFlavor)flavorIter.next();
+//
+//            List natives = map.getNativesForFlavor(flavor);
+//
+//            for (Iterator nativeIter = natives.iterator();
+//                 nativeIter.hasNext(); ) {
+//                Long lFormat =
+//                    getFormatForNativeAsLong((String)nativeIter.next());
+//                Object mapping = DataTransferer.createMapping(lFormat, flavor);
+//
+//                if (mappingSet.contains(mapping)) {
+//                    flavorMap.put(flavor, lFormat);
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return flavorMap;
+//    }
 
     /**
      * Returns a Set of all DataFlavors for which
@@ -873,32 +828,32 @@ public abstract class DataTransferer {
      *            DataFlavors and data formats
      * @throws NullPointerException if formats or map is <code>null</code>
      */
-    public Set getFlavorsForFormatsAsSet(long[] formats, FlavorTable map) {
-        Set flavorSet = new HashSet(formats.length);
-
-        for (int i = 0; i < formats.length; i++) {
-            String nat = getNativeForFormat(formats[i]);
-            List flavors = map.getFlavorsForNative(nat);
-
-            for (Iterator iter = flavors.iterator(); iter.hasNext(); ) {
-                DataFlavor flavor = (DataFlavor)iter.next();
-
-                // Don't explicitly test for String, since it is just a special
-                // case of Serializable
-                if (flavor.isFlavorTextType() ||
-                    flavor.isFlavorJavaFileListType() ||
-                    DataFlavor.imageFlavor.equals(flavor) ||
-                    flavor.isRepresentationClassSerializable() ||
-                    flavor.isRepresentationClassInputStream() ||
-                    flavor.isRepresentationClassRemote())
-                {
-                    flavorSet.add(flavor);
-                }
-            }
-        }
-
-        return flavorSet;
-    }
+//    public Set getFlavorsForFormatsAsSet(long[] formats, FlavorTable map) {
+//        Set flavorSet = new HashSet(formats.length);
+//
+//        for (int i = 0; i < formats.length; i++) {
+//            String nat = getNativeForFormat(formats[i]);
+//            List flavors = map.getFlavorsForNative(nat);
+//
+//            for (Iterator iter = flavors.iterator(); iter.hasNext(); ) {
+//                DataFlavor flavor = (DataFlavor)iter.next();
+//
+//                // Don't explicitly test for String, since it is just a special
+//                // case of Serializable
+//                if (flavor.isFlavorTextType() ||
+//                    flavor.isFlavorJavaFileListType() ||
+//                    DataFlavor.imageFlavor.equals(flavor) ||
+//                    flavor.isRepresentationClassSerializable() ||
+//                    flavor.isRepresentationClassInputStream() ||
+//                    flavor.isRepresentationClassRemote())
+//                {
+//                    flavorSet.add(flavor);
+//                }
+//            }
+//        }
+//
+//        return flavorSet;
+//    }
 
     /**
      * Returns an array of all DataFlavors for which
@@ -914,10 +869,10 @@ public abstract class DataTransferer {
      *            DataFlavors and data formats
      * @throws NullPointerException if map is <code>null</code>
      */
-    public DataFlavor[] getFlavorsForFormatAsArray(long format,
-                                                   FlavorTable map) {
-        return getFlavorsForFormatsAsArray(new long[] { format }, map);
-    }
+//    public DataFlavor[] getFlavorsForFormatAsArray(long format,
+//                                                   FlavorTable map) {
+//        return getFlavorsForFormatsAsArray(new long[] { format }, map);
+//    }
 
     /**
      * Returns an array of all DataFlavors for which
@@ -934,12 +889,12 @@ public abstract class DataTransferer {
      *            DataFlavors and data formats
      * @throws NullPointerException if formats or map is <code>null</code>
      */
-    public DataFlavor[] getFlavorsForFormatsAsArray(long[] formats,
-                                                    FlavorTable map) {
-        // getFlavorsForFormatsAsSet() is less expensive than
-        // getFlavorsForFormats().
-        return setToSortedDataFlavorArray(getFlavorsForFormatsAsSet(formats, map));
-    }
+//    public DataFlavor[] getFlavorsForFormatsAsArray(long[] formats,
+//                                                    FlavorTable map) {
+//        // getFlavorsForFormatsAsSet() is less expensive than
+//        // getFlavorsForFormats().
+//        return setToSortedDataFlavorArray(getFlavorsForFormatsAsSet(formats, map));
+//    }
 
     /**
      * Returns an object that represents a mapping between the specified
@@ -1161,252 +1116,252 @@ search:
      * Primary translation function for translating a Transferable into
      * a byte array, given a source DataFlavor and target format.
      */
-    public byte[] translateTransferable(Transferable contents,
-                                        DataFlavor flavor,
-                                        long format) throws IOException
-    {
-        // Obtain the transfer data in the source DataFlavor.
-        //
-        // Note that we special case DataFlavor.plainTextFlavor because
-        // StringSelection supports this flavor incorrectly -- instead of
-        // returning an InputStream as the DataFlavor representation class
-        // states, it returns a Reader. Instead of using this broken
-        // functionality, we request the data in stringFlavor (the other
-        // DataFlavor which StringSelection supports) and use the String
-        // translator.
-        Object obj;
-        boolean stringSelectionHack;
-        try {
-            obj = contents.getTransferData(flavor);
-            if (obj == null) {
-                return null;
-            }
-            if (flavor.equals(DataFlavor.plainTextFlavor) &&
-                !(obj instanceof InputStream))
-            {
-                obj = contents.getTransferData(DataFlavor.stringFlavor);
-                if (obj == null) {
-                    return null;
-                }
-                stringSelectionHack = true;
-            } else {
-                stringSelectionHack = false;
-            }
-        } catch (UnsupportedFlavorException e) {
-            throw new IOException(e.getMessage());
-        }
-
-        // Source data is a String. Search-and-replace EOLN. Encode into the
-        // target format. Append terminating NUL bytes.
-        if (stringSelectionHack ||
-            (String.class.equals(flavor.getRepresentationClass()) &&
-             isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
-
-            String str = removeSuspectedData(flavor, contents, (String)obj);
-
-            return translateTransferableString(
-                str,
-                format);
-
-        // Source data is a Reader. Convert to a String and recur. In the
-        // future, we may want to rewrite this so that we encode on demand.
-        } else if (flavor.isRepresentationClassReader()) {
-            if (!(isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
-                throw new IOException
-                    ("cannot transfer non-text data as Reader");
-            }
-
-            Reader r = (Reader)obj;
-            StringBuffer buf = new StringBuffer();
-            int c;
-            while ((c = r.read()) != -1) {
-                buf.append((char)c);
-            }
-            r.close();
-
-            return translateTransferableString(
-                buf.toString(),
-                format);
-
-        // Source data is a CharBuffer. Convert to a String and recur.
-        } else if (flavor.isRepresentationClassCharBuffer()) {
-            if (!(isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
-                throw new IOException
-                    ("cannot transfer non-text data as CharBuffer");
-            }
-
-            CharBuffer buffer = (CharBuffer)obj;
-            int size = buffer.remaining();
-            char[] chars = new char[size];
-            buffer.get(chars, 0, size);
-
-            return translateTransferableString(
-                new String(chars),
-                format);
-
-        // Source data is a char array. Convert to a String and recur.
-        } else if (charArrayClass.equals(flavor.getRepresentationClass())) {
-            if (!(isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
-                throw new IOException
-                    ("cannot transfer non-text data as char array");
-            }
-
-            return translateTransferableString(
-                new String((char[])obj),
-                format);
-
-        // Source data is a ByteBuffer. For arbitrary flavors, simply return
-        // the array. For text flavors, decode back to a String and recur to
-        // reencode according to the requested format.
-        } else if (flavor.isRepresentationClassByteBuffer()) {
-            ByteBuffer buffer = (ByteBuffer)obj;
-            int size = buffer.remaining();
-            byte[] bytes = new byte[size];
-            buffer.get(bytes, 0, size);
-
-            if (isFlavorCharsetTextType(flavor) && isTextFormat(format)) {
-                String sourceEncoding = DataTransferer.getTextCharset(flavor);
-                return translateTransferableString(
-                    new String(bytes, sourceEncoding),
-                    format);
-            } else {
-                return bytes;
-            }
-
-        // Source data is a byte array. For arbitrary flavors, simply return
-        // the array. For text flavors, decode back to a String and recur to
-        // reencode according to the requested format.
-        } else if (byteArrayClass.equals(flavor.getRepresentationClass())) {
-            byte[] bytes = (byte[])obj;
-
-            if (isFlavorCharsetTextType(flavor) && isTextFormat(format)) {
-                String sourceEncoding = DataTransferer.getTextCharset(flavor);
-                return translateTransferableString(
-                    new String(bytes, sourceEncoding),
-                    format);
-            } else {
-                return bytes;
-            }
-        // Source data is Image
-        } else if (DataFlavor.imageFlavor.equals(flavor)) {
-            if (!isImageFormat(format)) {
-                throw new IOException("Data translation failed: " +
-                                      "not an image format");
-            }
-
-            Image image = (Image)obj;
-            byte[] bytes = imageToPlatformBytes(image, format);
-
-            if (bytes == null) {
-                throw new IOException("Data translation failed: " +
-                    "cannot convert java image to native format");
-            }
-            return bytes;
-        }
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-        // Target data is a file list. Source data must be a
-        // java.util.List which contains java.io.File or String instances.
-        if (isFileFormat(format)) {
-            if (!DataFlavor.javaFileListFlavor.equals(flavor)) {
-                throw new IOException("data translation failed");
-            }
-
-            final List list = (List)obj;
-
-            final ProtectionDomain userProtectionDomain = getUserProtectionDomain(contents);
-
-            final ArrayList<String> fileList = castToFiles(list, userProtectionDomain);
-
-            bos = convertFileListToBytes(fileList);
-
-
-        // Target data is a URI list. Source data must be a
-        // java.util.List which contains java.io.File or String instances.
-        } else if (isURIListFormat(format)) {
-            if (!DataFlavor.javaFileListFlavor.equals(flavor)) {
-                throw new IOException("data translation failed");
-            }
-            String nat = getNativeForFormat(format);
-            String targetCharset = null;
-            if (nat != null) {
-                try {
-                    targetCharset = new DataFlavor(nat).getParameter("charset");
-                } catch (ClassNotFoundException cnfe) {
-                    throw new IOException(cnfe);
-                }
-            }
-            if (targetCharset == null) {
-                targetCharset = "UTF-8";
-            }
-            final List list = (List)obj;
-            final ProtectionDomain userProtectionDomain = getUserProtectionDomain(contents);
-            final ArrayList<String> fileList = castToFiles(list, userProtectionDomain);
-            final ArrayList<String> uriList = new ArrayList<String>(fileList.size());
-            for (String fileObject : fileList) {
-                final URI uri = new File(fileObject).toURI();
-                // Some implementations are fussy about the number of slashes (file:///path/to/file is best)
-                try {
-                    uriList.add(new URI(uri.getScheme(), "", uri.getPath(), uri.getFragment()).toString());
-                } catch (URISyntaxException uriSyntaxException) {
-                    throw new IOException(uriSyntaxException);
-                  }
-              }
-
-            byte[] eoln = "\r\n".getBytes(targetCharset);
-            for (int i = 0; i < uriList.size(); i++) {
-                byte[] bytes = uriList.get(i).getBytes(targetCharset);
-                bos.write(bytes, 0, bytes.length);
-                bos.write(eoln, 0, eoln.length);
-            }
-
-        // Source data is an InputStream. For arbitrary flavors, just grab the
-        // bytes and dump them into a byte array. For text flavors, decode back
-        // to a String and recur to reencode according to the requested format.
-        } else if (flavor.isRepresentationClassInputStream()) {
-            InputStream is = (InputStream)obj;
-            boolean eof = false;
-            int avail = is.available();
-            byte[] tmp = new byte[avail > 8192 ? avail : 8192];
-            do {
-                int ret;
-                if (!(eof = (ret = is.read(tmp, 0, tmp.length)) == -1)) {
-                    bos.write(tmp, 0, ret);
-                }
-            } while (!eof);
-            is.close();
-
-            if (isFlavorCharsetTextType(flavor) && isTextFormat(format)) {
-                byte[] bytes = bos.toByteArray();
-                bos.close();
-                String sourceEncoding = DataTransferer.getTextCharset(flavor);
-                return translateTransferableString(
-                    new String(bytes, sourceEncoding),
-                    format);
-            }
-
-        // Source data is an RMI object
-        } else if (flavor.isRepresentationClassRemote()) {
-            Object mo = RMI.newMarshalledObject(obj);
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeObject(mo);
-            oos.close();
-
-        // Source data is Serializable
-        } else if (flavor.isRepresentationClassSerializable()) {
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeObject(obj);
-            oos.close();
-
-        } else {
-            throw new IOException("data translation failed");
-        }
-
-        byte[] ret = bos.toByteArray();
-        bos.close();
-        return ret;
-    }
+//    public byte[] translateTransferable(Transferable contents,
+//                                        DataFlavor flavor,
+//                                        long format) throws IOException
+//    {
+//        // Obtain the transfer data in the source DataFlavor.
+//        //
+//        // Note that we special case DataFlavor.plainTextFlavor because
+//        // StringSelection supports this flavor incorrectly -- instead of
+//        // returning an InputStream as the DataFlavor representation class
+//        // states, it returns a Reader. Instead of using this broken
+//        // functionality, we request the data in stringFlavor (the other
+//        // DataFlavor which StringSelection supports) and use the String
+//        // translator.
+//        Object obj;
+//        boolean stringSelectionHack;
+//        try {
+//            obj = contents.getTransferData(flavor);
+//            if (obj == null) {
+//                return null;
+//            }
+//            if (flavor.equals(DataFlavor.plainTextFlavor) &&
+//                !(obj instanceof InputStream))
+//            {
+//                obj = contents.getTransferData(DataFlavor.stringFlavor);
+//                if (obj == null) {
+//                    return null;
+//                }
+//                stringSelectionHack = true;
+//            } else {
+//                stringSelectionHack = false;
+//            }
+//        } catch (UnsupportedFlavorException e) {
+//            throw new IOException(e.getMessage());
+//        }
+//
+//        // Source data is a String. Search-and-replace EOLN. Encode into the
+//        // target format. Append terminating NUL bytes.
+//        if (stringSelectionHack ||
+//            (String.class.equals(flavor.getRepresentationClass()) &&
+//             isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
+//
+//            String str = removeSuspectedData(flavor, contents, (String)obj);
+//
+//            return translateTransferableString(
+//                str,
+//                format);
+//
+//        // Source data is a Reader. Convert to a String and recur. In the
+//        // future, we may want to rewrite this so that we encode on demand.
+//        } else if (flavor.isRepresentationClassReader()) {
+//            if (!(isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
+//                throw new IOException
+//                    ("cannot transfer non-text data as Reader");
+//            }
+//
+//            Reader r = (Reader)obj;
+//            StringBuffer buf = new StringBuffer();
+//            int c;
+//            while ((c = r.read()) != -1) {
+//                buf.append((char)c);
+//            }
+//            r.close();
+//
+//            return translateTransferableString(
+//                buf.toString(),
+//                format);
+//
+//        // Source data is a CharBuffer. Convert to a String and recur.
+//        } else if (flavor.isRepresentationClassCharBuffer()) {
+//            if (!(isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
+//                throw new IOException
+//                    ("cannot transfer non-text data as CharBuffer");
+//            }
+//
+//            CharBuffer buffer = (CharBuffer)obj;
+//            int size = buffer.remaining();
+//            char[] chars = new char[size];
+//            buffer.get(chars, 0, size);
+//
+//            return translateTransferableString(
+//                new String(chars),
+//                format);
+//
+//        // Source data is a char array. Convert to a String and recur.
+//        } else if (charArrayClass.equals(flavor.getRepresentationClass())) {
+//            if (!(isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
+//                throw new IOException
+//                    ("cannot transfer non-text data as char array");
+//            }
+//
+//            return translateTransferableString(
+//                new String((char[])obj),
+//                format);
+//
+//        // Source data is a ByteBuffer. For arbitrary flavors, simply return
+//        // the array. For text flavors, decode back to a String and recur to
+//        // reencode according to the requested format.
+//        } else if (flavor.isRepresentationClassByteBuffer()) {
+//            ByteBuffer buffer = (ByteBuffer)obj;
+//            int size = buffer.remaining();
+//            byte[] bytes = new byte[size];
+//            buffer.get(bytes, 0, size);
+//
+//            if (isFlavorCharsetTextType(flavor) && isTextFormat(format)) {
+//                String sourceEncoding = DataTransferer.getTextCharset(flavor);
+//                return translateTransferableString(
+//                    new String(bytes, sourceEncoding),
+//                    format);
+//            } else {
+//                return bytes;
+//            }
+//
+//        // Source data is a byte array. For arbitrary flavors, simply return
+//        // the array. For text flavors, decode back to a String and recur to
+//        // reencode according to the requested format.
+//        } else if (byteArrayClass.equals(flavor.getRepresentationClass())) {
+//            byte[] bytes = (byte[])obj;
+//
+//            if (isFlavorCharsetTextType(flavor) && isTextFormat(format)) {
+//                String sourceEncoding = DataTransferer.getTextCharset(flavor);
+//                return translateTransferableString(
+//                    new String(bytes, sourceEncoding),
+//                    format);
+//            } else {
+//                return bytes;
+//            }
+//        // Source data is Image
+//        } else if (DataFlavor.imageFlavor.equals(flavor)) {
+//            if (!isImageFormat(format)) {
+//                throw new IOException("Data translation failed: " +
+//                                      "not an image format");
+//            }
+//
+//            Image image = (Image)obj;
+//            byte[] bytes = imageToPlatformBytes(image, format);
+//
+//            if (bytes == null) {
+//                throw new IOException("Data translation failed: " +
+//                    "cannot convert java image to native format");
+//            }
+//            return bytes;
+//        }
+//
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//
+//        // Target data is a file list. Source data must be a
+//        // java.util.List which contains java.io.File or String instances.
+//        if (isFileFormat(format)) {
+//            if (!DataFlavor.javaFileListFlavor.equals(flavor)) {
+//                throw new IOException("data translation failed");
+//            }
+//
+//            final List list = (List)obj;
+//
+//            final ProtectionDomain userProtectionDomain = getUserProtectionDomain(contents);
+//
+//            final ArrayList<String> fileList = castToFiles(list, userProtectionDomain);
+//
+//            bos = convertFileListToBytes(fileList);
+//
+//
+//        // Target data is a URI list. Source data must be a
+//        // java.util.List which contains java.io.File or String instances.
+//        } else if (isURIListFormat(format)) {
+//            if (!DataFlavor.javaFileListFlavor.equals(flavor)) {
+//                throw new IOException("data translation failed");
+//            }
+//            String nat = getNativeForFormat(format);
+//            String targetCharset = null;
+//            if (nat != null) {
+//                try {
+//                    targetCharset = new DataFlavor(nat).getParameter("charset");
+//                } catch (ClassNotFoundException cnfe) {
+//                    throw new IOException(cnfe);
+//                }
+//            }
+//            if (targetCharset == null) {
+//                targetCharset = "UTF-8";
+//            }
+//            final List list = (List)obj;
+//            final ProtectionDomain userProtectionDomain = getUserProtectionDomain(contents);
+//            final ArrayList<String> fileList = castToFiles(list, userProtectionDomain);
+//            final ArrayList<String> uriList = new ArrayList<String>(fileList.size());
+//            for (String fileObject : fileList) {
+//                final URI uri = new File(fileObject).toURI();
+//                // Some implementations are fussy about the number of slashes (file:///path/to/file is best)
+//                try {
+//                    uriList.add(new URI(uri.getScheme(), "", uri.getPath(), uri.getFragment()).toString());
+//                } catch (URISyntaxException uriSyntaxException) {
+//                    throw new IOException(uriSyntaxException);
+//                  }
+//              }
+//
+//            byte[] eoln = "\r\n".getBytes(targetCharset);
+//            for (int i = 0; i < uriList.size(); i++) {
+//                byte[] bytes = uriList.get(i).getBytes(targetCharset);
+//                bos.write(bytes, 0, bytes.length);
+//                bos.write(eoln, 0, eoln.length);
+//            }
+//
+//        // Source data is an InputStream. For arbitrary flavors, just grab the
+//        // bytes and dump them into a byte array. For text flavors, decode back
+//        // to a String and recur to reencode according to the requested format.
+//        } else if (flavor.isRepresentationClassInputStream()) {
+//            InputStream is = (InputStream)obj;
+//            boolean eof = false;
+//            int avail = is.available();
+//            byte[] tmp = new byte[avail > 8192 ? avail : 8192];
+//            do {
+//                int ret;
+//                if (!(eof = (ret = is.read(tmp, 0, tmp.length)) == -1)) {
+//                    bos.write(tmp, 0, ret);
+//                }
+//            } while (!eof);
+//            is.close();
+//
+//            if (isFlavorCharsetTextType(flavor) && isTextFormat(format)) {
+//                byte[] bytes = bos.toByteArray();
+//                bos.close();
+//                String sourceEncoding = DataTransferer.getTextCharset(flavor);
+//                return translateTransferableString(
+//                    new String(bytes, sourceEncoding),
+//                    format);
+//            }
+//
+//        // Source data is an RMI object
+//        } else if (flavor.isRepresentationClassRemote()) {
+//            Object mo = RMI.newMarshalledObject(obj);
+//            ObjectOutputStream oos = new ObjectOutputStream(bos);
+//            oos.writeObject(mo);
+//            oos.close();
+//
+//        // Source data is Serializable
+//        } else if (flavor.isRepresentationClassSerializable()) {
+//            ObjectOutputStream oos = new ObjectOutputStream(bos);
+//            oos.writeObject(obj);
+//            oos.close();
+//
+//        } else {
+//            throw new IOException("data translation failed");
+//        }
+//
+//        byte[] ret = bos.toByteArray();
+//        bos.close();
+//        return ret;
+//    }
 
     protected abstract ByteArrayOutputStream convertFileListToBytes(ArrayList<String> fileList) throws IOException;
 
@@ -1556,21 +1511,21 @@ search:
     }
 
 
-    public Object translateBytes(byte[] bytes, DataFlavor flavor,
-                                 long format, Transferable localeTransferable)
-        throws IOException
-    {
-        return translateBytesOrStream(null, bytes, flavor, format,
-                                      localeTransferable);
-    }
-
-    public Object translateStream(InputStream str, DataFlavor flavor,
-                                  long format, Transferable localeTransferable)
-        throws IOException
-    {
-        return translateBytesOrStream(str, null, flavor, format,
-                                      localeTransferable);
-    }
+//    public Object translateBytes(byte[] bytes, DataFlavor flavor,
+//                                 long format, Transferable localeTransferable)
+//        throws IOException
+//    {
+//        return translateBytesOrStream(null, bytes, flavor, format,
+//                                      localeTransferable);
+//    }
+//
+//    public Object translateStream(InputStream str, DataFlavor flavor,
+//                                  long format, Transferable localeTransferable)
+//        throws IOException
+//    {
+//        return translateBytesOrStream(str, null, flavor, format,
+//                                      localeTransferable);
+//    }
 
 
     /**
@@ -1583,210 +1538,210 @@ search:
      * immediately if necessary. The opposite conversion is expensive,
      * so avoid it if possible.
      */
-    protected Object translateBytesOrStream(InputStream str, byte[] bytes,
-                                            DataFlavor flavor, long format,
-                                            Transferable localeTransferable)
-        throws IOException
-    {
-
-        if (str == null) {
-            str = new ByteArrayInputStream(bytes);
-        }
-
-        // Source data is a file list. Use the dragQueryFile native function to
-        // do most of the decoding. Then wrap File objects around the String
-        // filenames and return a List.
-        if (isFileFormat(format)) {
-            if (!DataFlavor.javaFileListFlavor.equals(flavor)) {
-                throw new IOException("data translation failed");
-            }
-            if (bytes == null) {
-                bytes = inputStreamToByteArray(str);
-            }
-            String[] filenames = dragQueryFile(bytes);
-            if (filenames == null) {
-                str.close();
-                return null;
-            }
-
-            // Convert the strings to File objects
-            File[] files = new File[filenames.length];
-            for (int i = 0; i < filenames.length; i++) {
-                files[i] = new File(filenames[i]);
-            }
-            str.close();
-
-            // Turn the list of Files into a List and return
-            return Arrays.asList(files);
-
-        // Source data is a URI list. Convert to DataFlavor.javaFileListFlavor
-        // where possible.
-        } else if (isURIListFormat(format) && DataFlavor.javaFileListFlavor.equals(flavor)) {
-            try {
-                URI uris[] = dragQueryURIs(str, bytes, format, localeTransferable);
-                if (uris == null) {
-                    return null;
-                }
-                ArrayList files = new ArrayList();
-                for (URI uri : uris) {
-                    try {
-                        files.add(new File(uri));
-                    } catch (IllegalArgumentException illegalArg) {
-                        // When converting from URIs to less generic files,
-                        // common practice (Wine, SWT) seems to be to
-                        // silently drop the URIs that aren't local files.
-                    }
-                }
-                return files;
-            } finally {
-                str.close();
-            }
-
-        // Target data is a String. Strip terminating NUL bytes. Decode bytes
-        // into characters. Search-and-replace EOLN.
-        } else if (String.class.equals(flavor.getRepresentationClass()) &&
-                   isFlavorCharsetTextType(flavor) && isTextFormat(format)) {
-
-            return translateBytesOrStreamToString(
-                str, bytes,
-                format, localeTransferable);
-
-        // Special hack to maintain backwards-compatibility with the brokenness
-        // of StringSelection. Return a StringReader instead of an InputStream.
-        // Recur to obtain String and encapsulate.
-        } else if (DataFlavor.plainTextFlavor.equals(flavor)) {
-            return new StringReader(translateBytesOrStreamToString(
-                        str, bytes,
-                        format, localeTransferable));
-
-        // Target data is an InputStream. For arbitrary flavors, just return
-        // the raw bytes. For text flavors, decode to strip terminators and
-        // search-and-replace EOLN, then reencode according to the requested
-        // flavor.
-        } else if (flavor.isRepresentationClassInputStream()) {
-            return translateBytesOrStreamToInputStream(str, flavor, format,
-                                                       localeTransferable);
-
-        // Target data is a Reader. Obtain data in InputStream format, encoded
-        // as "Unicode" (utf-16be). Then use an InputStreamReader to decode
-        // back to chars on demand.
-        } else if (flavor.isRepresentationClassReader()) {
-            if (!(isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
-                throw new IOException
-                    ("cannot transfer non-text data as Reader");
-            }
-
-            InputStream is = (InputStream)
-                translateBytesOrStreamToInputStream
-                    (str, DataFlavor.plainTextFlavor, format,
-                     localeTransferable);
-            String unicode =
-                DataTransferer.getTextCharset(DataFlavor.plainTextFlavor);
-            Reader reader = new InputStreamReader(is, unicode);
-
-            return constructFlavoredObject(reader, flavor, Reader.class);
-
-        // Target data is a CharBuffer. Recur to obtain String and wrap.
-        } else if (flavor.isRepresentationClassCharBuffer()) {
-            if (!(isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
-                throw new IOException
-                    ("cannot transfer non-text data as CharBuffer");
-            }
-
-            CharBuffer buffer = CharBuffer.wrap(translateBytesOrStreamToString(
-                str, bytes,
-                format, localeTransferable));
-
-            return constructFlavoredObject(buffer, flavor, CharBuffer.class);
-
-        // Target data is a char array. Recur to obtain String and convert to
-        // char array.
-        } else if (charArrayClass.equals(flavor.getRepresentationClass())) {
-            if (!(isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
-                throw new IOException
-                    ("cannot transfer non-text data as char array");
-            }
-
-            return translateBytesOrStreamToString(
-                    str, bytes,
-                    format, localeTransferable).toCharArray();
-
-        // Target data is a ByteBuffer. For arbitrary flavors, just return
-        // the raw bytes. For text flavors, convert to a String to strip
-        // terminators and search-and-replace EOLN, then reencode according to
-        // the requested flavor.
-        } else if (flavor.isRepresentationClassByteBuffer()) {
-            if (isFlavorCharsetTextType(flavor) && isTextFormat(format)) {
-                bytes = translateBytesOrStreamToString(
-                    str, bytes,
-                    format, localeTransferable
-                ).getBytes(
-                    DataTransferer.getTextCharset(flavor)
-                );
-            } else {
-                if (bytes == null) {
-                    bytes = inputStreamToByteArray(str);
-                }
-            }
-
-            ByteBuffer buffer = ByteBuffer.wrap(bytes);
-            return constructFlavoredObject(buffer, flavor, ByteBuffer.class);
-
-        // Target data is a byte array. For arbitrary flavors, just return
-        // the raw bytes. For text flavors, convert to a String to strip
-        // terminators and search-and-replace EOLN, then reencode according to
-        // the requested flavor.
-        } else if (byteArrayClass.equals(flavor.getRepresentationClass())) {
-            if (isFlavorCharsetTextType(flavor) && isTextFormat(format)) {
-                return translateBytesOrStreamToString(
-                    str, bytes,
-                    format, localeTransferable
-                ).getBytes(
-                    DataTransferer.getTextCharset(flavor)
-                );
-            } else {
-                return (bytes != null) ? bytes : inputStreamToByteArray(str);
-            }
-
-        // Target data is an RMI object
-        } else if (flavor.isRepresentationClassRemote()) {
-            try {
-                byte[] ba = inputStreamToByteArray(str);
-                ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(ba));
-                Object ret = RMI.getMarshalledObject(ois.readObject());
-                ois.close();
-                str.close();
-                return ret;
-            } catch (Exception e) {
-                throw new IOException(e.getMessage());
-            }
-
-        // Target data is Serializable
-        } else if (flavor.isRepresentationClassSerializable()) {
-            try {
-                byte[] ba = inputStreamToByteArray(str);
-                ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(ba));
-                Object ret = ois.readObject();
-                ois.close();
-                str.close();
-                return ret;
-            } catch (Exception e) {
-                throw new IOException(e.getMessage());
-            }
-
-        // Target data is Image
-        } else if (DataFlavor.imageFlavor.equals(flavor)) {
-            if (!isImageFormat(format)) {
-                throw new IOException("data translation failed");
-            }
-
-            Image image = platformImageBytesOrStreamToImage(str, bytes, format);
-            str.close();
-            return image;
-        }
-
-        throw new IOException("data translation failed");
-    }
+//    protected Object translateBytesOrStream(InputStream str, byte[] bytes,
+//                                            DataFlavor flavor, long format,
+//                                            Transferable localeTransferable)
+//        throws IOException
+//    {
+//
+//        if (str == null) {
+//            str = new ByteArrayInputStream(bytes);
+//        }
+//
+//        // Source data is a file list. Use the dragQueryFile native function to
+//        // do most of the decoding. Then wrap File objects around the String
+//        // filenames and return a List.
+//        if (isFileFormat(format)) {
+//            if (!DataFlavor.javaFileListFlavor.equals(flavor)) {
+//                throw new IOException("data translation failed");
+//            }
+//            if (bytes == null) {
+//                bytes = inputStreamToByteArray(str);
+//            }
+//            String[] filenames = dragQueryFile(bytes);
+//            if (filenames == null) {
+//                str.close();
+//                return null;
+//            }
+//
+//            // Convert the strings to File objects
+//            File[] files = new File[filenames.length];
+//            for (int i = 0; i < filenames.length; i++) {
+//                files[i] = new File(filenames[i]);
+//            }
+//            str.close();
+//
+//            // Turn the list of Files into a List and return
+//            return Arrays.asList(files);
+//
+//        // Source data is a URI list. Convert to DataFlavor.javaFileListFlavor
+//        // where possible.
+//        } else if (isURIListFormat(format) && DataFlavor.javaFileListFlavor.equals(flavor)) {
+//            try {
+//                URI uris[] = dragQueryURIs(str, bytes, format, localeTransferable);
+//                if (uris == null) {
+//                    return null;
+//                }
+//                ArrayList files = new ArrayList();
+//                for (URI uri : uris) {
+//                    try {
+//                        files.add(new File(uri));
+//                    } catch (IllegalArgumentException illegalArg) {
+//                        // When converting from URIs to less generic files,
+//                        // common practice (Wine, SWT) seems to be to
+//                        // silently drop the URIs that aren't local files.
+//                    }
+//                }
+//                return files;
+//            } finally {
+//                str.close();
+//            }
+//
+//        // Target data is a String. Strip terminating NUL bytes. Decode bytes
+//        // into characters. Search-and-replace EOLN.
+//        } else if (String.class.equals(flavor.getRepresentationClass()) &&
+//                   isFlavorCharsetTextType(flavor) && isTextFormat(format)) {
+//
+//            return translateBytesOrStreamToString(
+//                str, bytes,
+//                format, localeTransferable);
+//
+//        // Special hack to maintain backwards-compatibility with the brokenness
+//        // of StringSelection. Return a StringReader instead of an InputStream.
+//        // Recur to obtain String and encapsulate.
+//        } else if (DataFlavor.plainTextFlavor.equals(flavor)) {
+//            return new StringReader(translateBytesOrStreamToString(
+//                        str, bytes,
+//                        format, localeTransferable));
+//
+//        // Target data is an InputStream. For arbitrary flavors, just return
+//        // the raw bytes. For text flavors, decode to strip terminators and
+//        // search-and-replace EOLN, then reencode according to the requested
+//        // flavor.
+//        } else if (flavor.isRepresentationClassInputStream()) {
+//            return translateBytesOrStreamToInputStream(str, flavor, format,
+//                                                       localeTransferable);
+//
+//        // Target data is a Reader. Obtain data in InputStream format, encoded
+//        // as "Unicode" (utf-16be). Then use an InputStreamReader to decode
+//        // back to chars on demand.
+//        } else if (flavor.isRepresentationClassReader()) {
+//            if (!(isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
+//                throw new IOException
+//                    ("cannot transfer non-text data as Reader");
+//            }
+//
+//            InputStream is = (InputStream)
+//                translateBytesOrStreamToInputStream
+//                    (str, DataFlavor.plainTextFlavor, format,
+//                     localeTransferable);
+//            String unicode =
+//                DataTransferer.getTextCharset(DataFlavor.plainTextFlavor);
+//            Reader reader = new InputStreamReader(is, unicode);
+//
+//            return constructFlavoredObject(reader, flavor, Reader.class);
+//
+//        // Target data is a CharBuffer. Recur to obtain String and wrap.
+//        } else if (flavor.isRepresentationClassCharBuffer()) {
+//            if (!(isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
+//                throw new IOException
+//                    ("cannot transfer non-text data as CharBuffer");
+//            }
+//
+//            CharBuffer buffer = CharBuffer.wrap(translateBytesOrStreamToString(
+//                str, bytes,
+//                format, localeTransferable));
+//
+//            return constructFlavoredObject(buffer, flavor, CharBuffer.class);
+//
+//        // Target data is a char array. Recur to obtain String and convert to
+//        // char array.
+//        } else if (charArrayClass.equals(flavor.getRepresentationClass())) {
+//            if (!(isFlavorCharsetTextType(flavor) && isTextFormat(format))) {
+//                throw new IOException
+//                    ("cannot transfer non-text data as char array");
+//            }
+//
+//            return translateBytesOrStreamToString(
+//                    str, bytes,
+//                    format, localeTransferable).toCharArray();
+//
+//        // Target data is a ByteBuffer. For arbitrary flavors, just return
+//        // the raw bytes. For text flavors, convert to a String to strip
+//        // terminators and search-and-replace EOLN, then reencode according to
+//        // the requested flavor.
+//        } else if (flavor.isRepresentationClassByteBuffer()) {
+//            if (isFlavorCharsetTextType(flavor) && isTextFormat(format)) {
+//                bytes = translateBytesOrStreamToString(
+//                    str, bytes,
+//                    format, localeTransferable
+//                ).getBytes(
+//                    DataTransferer.getTextCharset(flavor)
+//                );
+//            } else {
+//                if (bytes == null) {
+//                    bytes = inputStreamToByteArray(str);
+//                }
+//            }
+//
+//            ByteBuffer buffer = ByteBuffer.wrap(bytes);
+//            return constructFlavoredObject(buffer, flavor, ByteBuffer.class);
+//
+//        // Target data is a byte array. For arbitrary flavors, just return
+//        // the raw bytes. For text flavors, convert to a String to strip
+//        // terminators and search-and-replace EOLN, then reencode according to
+//        // the requested flavor.
+//        } else if (byteArrayClass.equals(flavor.getRepresentationClass())) {
+//            if (isFlavorCharsetTextType(flavor) && isTextFormat(format)) {
+//                return translateBytesOrStreamToString(
+//                    str, bytes,
+//                    format, localeTransferable
+//                ).getBytes(
+//                    DataTransferer.getTextCharset(flavor)
+//                );
+//            } else {
+//                return (bytes != null) ? bytes : inputStreamToByteArray(str);
+//            }
+//
+//        // Target data is an RMI object
+//        } else if (flavor.isRepresentationClassRemote()) {
+//            try {
+//                byte[] ba = inputStreamToByteArray(str);
+//                ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(ba));
+//                Object ret = RMI.getMarshalledObject(ois.readObject());
+//                ois.close();
+//                str.close();
+//                return ret;
+//            } catch (Exception e) {
+//                throw new IOException(e.getMessage());
+//            }
+//
+//        // Target data is Serializable
+//        } else if (flavor.isRepresentationClassSerializable()) {
+//            try {
+//                byte[] ba = inputStreamToByteArray(str);
+//                ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(ba));
+//                Object ret = ois.readObject();
+//                ois.close();
+//                str.close();
+//                return ret;
+//            } catch (Exception e) {
+//                throw new IOException(e.getMessage());
+//            }
+//
+//        // Target data is Image
+//        } else if (DataFlavor.imageFlavor.equals(flavor)) {
+//            if (!isImageFormat(format)) {
+//                throw new IOException("data translation failed");
+//            }
+//
+//            Image image = platformImageBytesOrStreamToImage(str, bytes, format);
+//            str.close();
+//            return image;
+//        }
+//
+//        throw new IOException("data translation failed");
+//    }
 
     /**
      * For arbitrary flavors, just use the raw InputStream. For text flavors,
@@ -2062,10 +2017,10 @@ search:
      * Translates either a byte array or an input stream which contain
      * platform-specific image data in the given format into an Image.
      */
-    protected abstract Image platformImageBytesOrStreamToImage(InputStream str,
-                                                               byte[] bytes,
-                                                               long format)
-      throws IOException;
+//    protected abstract Image platformImageBytesOrStreamToImage(InputStream str,
+//                                                               byte[] bytes,
+//                                                               long format)
+//      throws IOException;
 
     /**
      * Translates either a byte array or an input stream which contain
@@ -2073,61 +2028,61 @@ search:
      *
      * @param mimeType image MIME type, such as: image/png, image/jpeg, image/gif
      */
-    protected Image standardImageBytesOrStreamToImage(InputStream inputStream,
-                                                      byte[] bytes,
-                                                      String mimeType)
-      throws IOException {
-        if (inputStream == null) {
-            inputStream = new ByteArrayInputStream(bytes);
-        }
-
-        Iterator readerIterator = ImageIO.getImageReadersByMIMEType(mimeType);
-
-        if (!readerIterator.hasNext()) {
-            throw new IOException("No registered service provider can decode " +
-                                  " an image from " + mimeType);
-        }
-
-        IOException ioe = null;
-
-        while (readerIterator.hasNext()) {
-            ImageReader imageReader = (ImageReader)readerIterator.next();
-            try {
-                ImageInputStream imageInputStream =
-                    ImageIO.createImageInputStream(inputStream);
-
-                try {
-                    ImageReadParam param = imageReader.getDefaultReadParam();
-                    imageReader.setInput(imageInputStream, true, true);
-                    BufferedImage bufferedImage =
-                        imageReader.read(imageReader.getMinIndex(), param);
-                    if (bufferedImage != null) {
-                        return bufferedImage;
-                    }
-                } finally {
-                    imageInputStream.close();
-                    imageReader.dispose();
-                }
-            } catch (IOException e) {
-                ioe = e;
-                continue;
-            }
-        }
-
-        if (ioe == null) {
-            ioe = new IOException("Registered service providers failed to decode"
-                                  + " an image from " + mimeType);
-        }
-
-        throw ioe;
-    }
+//    protected Image standardImageBytesOrStreamToImage(InputStream inputStream,
+//                                                      byte[] bytes,
+//                                                      String mimeType)
+//      throws IOException {
+//        if (inputStream == null) {
+//            inputStream = new ByteArrayInputStream(bytes);
+//        }
+//
+//        Iterator readerIterator = ImageIO.getImageReadersByMIMEType(mimeType);
+//
+//        if (!readerIterator.hasNext()) {
+//            throw new IOException("No registered service provider can decode " +
+//                                  " an image from " + mimeType);
+//        }
+//
+//        IOException ioe = null;
+//
+//        while (readerIterator.hasNext()) {
+//            ImageReader imageReader = (ImageReader)readerIterator.next();
+//            try {
+//                ImageInputStream imageInputStream =
+//                    ImageIO.createImageInputStream(inputStream);
+//
+//                try {
+//                    ImageReadParam param = imageReader.getDefaultReadParam();
+//                    imageReader.setInput(imageInputStream, true, true);
+//                    BufferedImage bufferedImage =
+//                        imageReader.read(imageReader.getMinIndex(), param);
+//                    if (bufferedImage != null) {
+//                        return bufferedImage;
+//                    }
+//                } finally {
+//                    imageInputStream.close();
+//                    imageReader.dispose();
+//                }
+//            } catch (IOException e) {
+//                ioe = e;
+//                continue;
+//            }
+//        }
+//
+//        if (ioe == null) {
+//            ioe = new IOException("Registered service providers failed to decode"
+//                                  + " an image from " + mimeType);
+//        }
+//
+//        throw ioe;
+//    }
 
     /**
      * Translates a Java Image into a byte array which contains platform-
      * specific image data in the given format.
      */
-    protected abstract byte[] imageToPlatformBytes(Image image, long format)
-      throws IOException;
+//    protected abstract byte[] imageToPlatformBytes(Image image, long format)
+//      throws IOException;
 
     /**
      * Translates a Java Image into a byte array which contains
@@ -2135,116 +2090,116 @@ search:
      *
      * @param mimeType image MIME type, such as: image/png, image/jpeg
      */
-    protected byte[] imageToStandardBytes(Image image, String mimeType)
-      throws IOException {
-        IOException originalIOE = null;
+//    protected byte[] imageToStandardBytes(Image image, String mimeType)
+//      throws IOException {
+//        IOException originalIOE = null;
+//
+//        Iterator writerIterator = ImageIO.getImageWritersByMIMEType(mimeType);
+//
+//        if (!writerIterator.hasNext()) {
+//            throw new IOException("No registered service provider can encode " +
+//                                  " an image to " + mimeType);
+//        }
+//
+//        if (image instanceof RenderedImage) {
+//            // Try to encode the original image.
+//            try {
+//                return imageToStandardBytesImpl((RenderedImage)image, mimeType);
+//            } catch (IOException ioe) {
+//                originalIOE = ioe;
+//            }
+//        }
+//
+//        // Retry with a BufferedImage.
+//        int width = 0;
+//        int height = 0;
+//        if (image instanceof ToolkitImage) {
+//            ImageRepresentation ir = ((ToolkitImage)image).getImageRep();
+//            ir.reconstruct(ImageObserver.ALLBITS);
+//            width = ir.getWidth();
+//            height = ir.getHeight();
+//        } else {
+//            width = image.getWidth(null);
+//            height = image.getHeight(null);
+//        }
+//
+//        ColorModel model = ColorModel.getRGBdefault();
+//        WritableRaster raster =
+//            model.createCompatibleWritableRaster(width, height);
+//
+//        BufferedImage bufferedImage =
+//            new BufferedImage(model, raster, model.isAlphaPremultiplied(),
+//                              null);
+//
+//        Graphics g = bufferedImage.getGraphics();
+//        try {
+//            g.drawImage(image, 0, 0, width, height, null);
+//        } finally {
+//            g.dispose();
+//        }
+//
+//        try {
+//            return imageToStandardBytesImpl(bufferedImage, mimeType);
+//        } catch (IOException ioe) {
+//            if (originalIOE != null) {
+//                throw originalIOE;
+//            } else {
+//                throw ioe;
+//            }
+//        }
+//    }
 
-        Iterator writerIterator = ImageIO.getImageWritersByMIMEType(mimeType);
-
-        if (!writerIterator.hasNext()) {
-            throw new IOException("No registered service provider can encode " +
-                                  " an image to " + mimeType);
-        }
-
-        if (image instanceof RenderedImage) {
-            // Try to encode the original image.
-            try {
-                return imageToStandardBytesImpl((RenderedImage)image, mimeType);
-            } catch (IOException ioe) {
-                originalIOE = ioe;
-            }
-        }
-
-        // Retry with a BufferedImage.
-        int width = 0;
-        int height = 0;
-        if (image instanceof ToolkitImage) {
-            ImageRepresentation ir = ((ToolkitImage)image).getImageRep();
-            ir.reconstruct(ImageObserver.ALLBITS);
-            width = ir.getWidth();
-            height = ir.getHeight();
-        } else {
-            width = image.getWidth(null);
-            height = image.getHeight(null);
-        }
-
-        ColorModel model = ColorModel.getRGBdefault();
-        WritableRaster raster =
-            model.createCompatibleWritableRaster(width, height);
-
-        BufferedImage bufferedImage =
-            new BufferedImage(model, raster, model.isAlphaPremultiplied(),
-                              null);
-
-        Graphics g = bufferedImage.getGraphics();
-        try {
-            g.drawImage(image, 0, 0, width, height, null);
-        } finally {
-            g.dispose();
-        }
-
-        try {
-            return imageToStandardBytesImpl(bufferedImage, mimeType);
-        } catch (IOException ioe) {
-            if (originalIOE != null) {
-                throw originalIOE;
-            } else {
-                throw ioe;
-            }
-        }
-    }
-
-    protected byte[] imageToStandardBytesImpl(RenderedImage renderedImage,
-                                              String mimeType)
-        throws IOException {
-
-        Iterator writerIterator = ImageIO.getImageWritersByMIMEType(mimeType);
-
-        ImageTypeSpecifier typeSpecifier =
-            new ImageTypeSpecifier(renderedImage);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        IOException ioe = null;
-
-        while (writerIterator.hasNext()) {
-            ImageWriter imageWriter = (ImageWriter)writerIterator.next();
-            ImageWriterSpi writerSpi = imageWriter.getOriginatingProvider();
-
-            if (!writerSpi.canEncodeImage(typeSpecifier)) {
-                continue;
-            }
-
-            try {
-                ImageOutputStream imageOutputStream =
-                    ImageIO.createImageOutputStream(baos);
-                try {
-                    imageWriter.setOutput(imageOutputStream);
-                    imageWriter.write(renderedImage);
-                    imageOutputStream.flush();
-                } finally {
-                    imageOutputStream.close();
-                }
-            } catch (IOException e) {
-                imageWriter.dispose();
-                baos.reset();
-                ioe = e;
-                continue;
-            }
-
-            imageWriter.dispose();
-            baos.close();
-            return baos.toByteArray();
-        }
-
-        baos.close();
-
-        if (ioe == null) {
-            ioe = new IOException("Registered service providers failed to encode "
-                                  + renderedImage + " to " + mimeType);
-        }
-
-        throw ioe;
-    }
+//    protected byte[] imageToStandardBytesImpl(RenderedImage renderedImage,
+//                                              String mimeType)
+//        throws IOException {
+//
+//        Iterator writerIterator = ImageIO.getImageWritersByMIMEType(mimeType);
+//
+//        ImageTypeSpecifier typeSpecifier =
+//            new ImageTypeSpecifier(renderedImage);
+//
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        IOException ioe = null;
+//
+//        while (writerIterator.hasNext()) {
+//            ImageWriter imageWriter = (ImageWriter)writerIterator.next();
+//            ImageWriterSpi writerSpi = imageWriter.getOriginatingProvider();
+//
+//            if (!writerSpi.canEncodeImage(typeSpecifier)) {
+//                continue;
+//            }
+//
+//            try {
+//                ImageOutputStream imageOutputStream =
+//                    ImageIO.createImageOutputStream(baos);
+//                try {
+//                    imageWriter.setOutput(imageOutputStream);
+//                    imageWriter.write(renderedImage);
+//                    imageOutputStream.flush();
+//                } finally {
+//                    imageOutputStream.close();
+//                }
+//            } catch (IOException e) {
+//                imageWriter.dispose();
+//                baos.reset();
+//                ioe = e;
+//                continue;
+//            }
+//
+//            imageWriter.dispose();
+//            baos.close();
+//            return baos.toByteArray();
+//        }
+//
+//        baos.close();
+//
+//        if (ioe == null) {
+//            ioe = new IOException("Registered service providers failed to encode "
+//                                  + renderedImage + " to " + mimeType);
+//        }
+//
+//        throw ioe;
+//    }
 
     /**
      * Concatenates the data represented by two objects. Objects can be either
@@ -2292,102 +2247,102 @@ search:
         return new SequenceInputStream(str1, str2);
     }
 
-    public byte[] convertData(final Object source,
-                              final Transferable contents,
-                              final long format,
-                              final Map formatMap,
-                              final boolean isToolkitThread)
-        throws IOException
-    {
-        byte[] ret = null;
+//    public byte[] convertData(final Object source,
+//                              final Transferable contents,
+//                              final long format,
+//                              final Map formatMap,
+//                              final boolean isToolkitThread)
+//        throws IOException
+//    {
+//        byte[] ret = null;
+//
+//        /*
+//         * If the current thread is the Toolkit thread we should post a
+//         * Runnable to the event dispatch thread associated with source Object,
+//         * since translateTransferable() calls Transferable.getTransferData()
+//         * that may contain client code.
+//         */
+//        if (isToolkitThread) try {
+//            final Stack stack = new Stack();
+//            final Runnable dataConverter = new Runnable() {
+//                // Guard against multiple executions.
+//                private boolean done = false;
+//                public void run() {
+//                    if (done) {
+//                        return;
+//                    }
+//                    byte[] data = null;
+//                    try {
+//                        DataFlavor flavor = (DataFlavor)formatMap.get(Long.valueOf(format));
+//                        if (flavor != null) {
+//                            data = translateTransferable(contents, flavor, format);
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        data = null;
+//                    }
+//                    try {
+//                        getToolkitThreadBlockedHandler().lock();
+//                        stack.push(data);
+//                        getToolkitThreadBlockedHandler().exit();
+//                    } finally {
+//                        getToolkitThreadBlockedHandler().unlock();
+//                        done = true;
+//                    }
+//                }
+//            };
+//
+//            final AppContext appContext = SunToolkit.targetToAppContext(source);
+//
+//            getToolkitThreadBlockedHandler().lock();
+//
+//            if (appContext != null) {
+//                appContext.put(DATA_CONVERTER_KEY, dataConverter);
+//            }
+//
+//            SunToolkit.executeOnEventHandlerThread(source, dataConverter);
+//
+//            while (stack.empty()) {
+//                getToolkitThreadBlockedHandler().enter();
+//            }
+//
+//            if (appContext != null) {
+//                appContext.remove(DATA_CONVERTER_KEY);
+//            }
+//
+//            ret = (byte[])stack.pop();
+//        } finally {
+//            getToolkitThreadBlockedHandler().unlock();
+//        } else {
+//            DataFlavor flavor = (DataFlavor)
+//                formatMap.get(Long.valueOf(format));
+//            if (flavor != null) {
+//                ret = translateTransferable(contents, flavor, format);
+//            }
+//        }
+//
+//        return ret;
+//    }
 
-        /*
-         * If the current thread is the Toolkit thread we should post a
-         * Runnable to the event dispatch thread associated with source Object,
-         * since translateTransferable() calls Transferable.getTransferData()
-         * that may contain client code.
-         */
-        if (isToolkitThread) try {
-            final Stack stack = new Stack();
-            final Runnable dataConverter = new Runnable() {
-                // Guard against multiple executions.
-                private boolean done = false;
-                public void run() {
-                    if (done) {
-                        return;
-                    }
-                    byte[] data = null;
-                    try {
-                        DataFlavor flavor = (DataFlavor)formatMap.get(Long.valueOf(format));
-                        if (flavor != null) {
-                            data = translateTransferable(contents, flavor, format);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        data = null;
-                    }
-                    try {
-                        getToolkitThreadBlockedHandler().lock();
-                        stack.push(data);
-                        getToolkitThreadBlockedHandler().exit();
-                    } finally {
-                        getToolkitThreadBlockedHandler().unlock();
-                        done = true;
-                    }
-                }
-            };
+//    public void processDataConversionRequests() {
+//        if (EventQueue.isDispatchThread()) {
+//            AppContext appContext = AppContext.getAppContext();
+//            getToolkitThreadBlockedHandler().lock();
+//            try {
+//                Runnable dataConverter =
+//                    (Runnable)appContext.get(DATA_CONVERTER_KEY);
+//                if (dataConverter != null) {
+//                    dataConverter.run();
+//                    appContext.remove(DATA_CONVERTER_KEY);
+//                }
+//            } finally {
+//                getToolkitThreadBlockedHandler().unlock();
+//            }
+//        }
+//    }
 
-            final AppContext appContext = SunToolkit.targetToAppContext(source);
-
-            getToolkitThreadBlockedHandler().lock();
-
-            if (appContext != null) {
-                appContext.put(DATA_CONVERTER_KEY, dataConverter);
-            }
-
-            SunToolkit.executeOnEventHandlerThread(source, dataConverter);
-
-            while (stack.empty()) {
-                getToolkitThreadBlockedHandler().enter();
-            }
-
-            if (appContext != null) {
-                appContext.remove(DATA_CONVERTER_KEY);
-            }
-
-            ret = (byte[])stack.pop();
-        } finally {
-            getToolkitThreadBlockedHandler().unlock();
-        } else {
-            DataFlavor flavor = (DataFlavor)
-                formatMap.get(Long.valueOf(format));
-            if (flavor != null) {
-                ret = translateTransferable(contents, flavor, format);
-            }
-        }
-
-        return ret;
-    }
-
-    public void processDataConversionRequests() {
-        if (EventQueue.isDispatchThread()) {
-            AppContext appContext = AppContext.getAppContext();
-            getToolkitThreadBlockedHandler().lock();
-            try {
-                Runnable dataConverter =
-                    (Runnable)appContext.get(DATA_CONVERTER_KEY);
-                if (dataConverter != null) {
-                    dataConverter.run();
-                    appContext.remove(DATA_CONVERTER_KEY);
-                }
-            } finally {
-                getToolkitThreadBlockedHandler().unlock();
-            }
-        }
-    }
-
-    public abstract ToolkitThreadBlockedHandler
-        getToolkitThreadBlockedHandler();
+//    public abstract ToolkitThreadBlockedHandler
+//        getToolkitThreadBlockedHandler();
 
     /**
      * Helper function to reduce a Map with Long keys to a long array.

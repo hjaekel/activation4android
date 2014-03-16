@@ -23,13 +23,12 @@
  * questions.
  */
 
-package java.awt.datatransfer;
+package and.awt.datatransfer;
 
 import java.io.Externalizable;
 import java.io.ObjectOutput;
 import java.io.ObjectInput;
 import java.io.IOException;
-import java.util.Enumeration;
 
 
 /**

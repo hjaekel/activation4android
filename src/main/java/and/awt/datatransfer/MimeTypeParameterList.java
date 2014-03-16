@@ -23,7 +23,7 @@
  * questions.
  */
 
-package java.awt.datatransfer;
+package and.awt.datatransfer;
 
 import java.util.Enumeration;
 import java.util.Hashtable;

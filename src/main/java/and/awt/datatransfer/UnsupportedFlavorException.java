@@ -23,7 +23,7 @@
  * questions.
  */
 
-package java.awt.datatransfer;
+package and.awt.datatransfer;
 
 /**
  * Signals that the requested data is not supported in this flavor.

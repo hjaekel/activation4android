@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import java.io.*;
-import java.awt.datatransfer.DataFlavor;
+import and.awt.datatransfer.DataFlavor;
 import javax.activation.*;
 
 

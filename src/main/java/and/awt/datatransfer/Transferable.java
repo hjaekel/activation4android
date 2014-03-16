@@ -23,7 +23,7 @@
  * questions.
  */
 
-package java.awt.datatransfer;
+package and.awt.datatransfer;
 
 import java.io.IOException;
 

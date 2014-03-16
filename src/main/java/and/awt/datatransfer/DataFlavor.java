@@ -23,9 +23,8 @@
  * questions.
  */
 
-package java.awt.datatransfer;
+package and.awt.datatransfer;
 
-import java.awt.Toolkit;
 import java.io.*;
 import java.nio.*;
 import java.util.*;
@@ -441,7 +440,7 @@ public class DataFlavor implements Externalizable, Cloneable {
     * @throws ClassNotFoundException
     * @throws  NullPointerException if <code>mimeType</code> is null
     *
-    * @see tryToLoadClass
+    * @see #tryToLoadClass(String, ClassLoader) tryToLoadClass
     */
     private void initialize(String mimeType, String humanPresentableName, ClassLoader classLoader) throws MimeTypeParseException, ClassNotFoundException {
         if (mimeType == null) {
@@ -533,16 +532,16 @@ public class DataFlavor implements Externalizable, Cloneable {
      *    with Unicode encoding
      * @since 1.3
      */
-    public static final DataFlavor getTextPlainUnicodeFlavor() {
-        String encoding = null;
-        DataTransferer transferer = DataTransferer.getInstance();
-        if (transferer != null) {
-            encoding = transferer.getDefaultUnicodeEncoding();
-        }
-        return new DataFlavor(
-            "text/plain;charset="+encoding
-            +";class=java.io.InputStream", "Plain Text");
-    }
+//    public static final DataFlavor getTextPlainUnicodeFlavor() {
+//        String encoding = null;
+//        DataTransferer transferer = DataTransferer.getInstance();
+//        if (transferer != null) {
+//            encoding = transferer.getDefaultUnicodeEncoding();
+//        }
+//        return new DataFlavor(
+//            "text/plain;charset="+encoding
+//            +";class=java.io.InputStream", "Plain Text");
+//    }
 
     /**
      * Selects the best text <code>DataFlavor</code> from an array of <code>

@@ -31,9 +31,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.*;
 import javax.activation.*;
-import java.awt.datatransfer.*;
+
+import and.awt.datatransfer.DataFlavor;
 
 public class ODCHTest {
     private FileDataSource fds = null;

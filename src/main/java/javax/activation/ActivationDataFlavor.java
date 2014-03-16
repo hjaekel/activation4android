@@ -40,13 +40,11 @@
 
 package javax.activation;
 
-import java.awt.datatransfer.DataFlavor;
-import java.io.IOException;
-import javax.activation.MimeType;
+import and.awt.datatransfer.DataFlavor;
 
 /**
  * The ActivationDataFlavor class is a special subclass of
- * <code>java.awt.datatransfer.DataFlavor</code>. It allows the JAF to
+ * <code>DataFlavor</code>. It allows the JAF to
  * set all three values stored by the DataFlavor class via a new
  * constructor. It also contains improved MIME parsing in the <code>equals
  * </code> method. Except for the improved parsing, its semantics are

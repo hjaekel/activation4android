@@ -47,9 +47,9 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
+import and.awt.datatransfer.Transferable;
+import and.awt.datatransfer.DataFlavor;
+import and.awt.datatransfer.UnsupportedFlavorException;
 
 /**
  * The DataHandler class provides a consistent interface to data
