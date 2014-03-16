@@ -54,7 +54,7 @@ import and.awt.datatransfer.DataFlavor;
 public class ActivationDataFlavor extends DataFlavor {
 
     /*
-     * Raison d'etre:
+     * Raison d’être:
      *
      * The DataFlavor class included in JDK 1.1 has several limitations
      * including piss poor MIME type parsing, and the limitation of
