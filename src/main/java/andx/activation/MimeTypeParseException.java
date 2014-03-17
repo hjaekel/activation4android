@@ -35,27 +35,29 @@
  */
 
 /*
- * @(#)DataContentHandlerFactory.java	1.7 07/05/14
+ * @(#)MimeTypeParseException.java	1.7 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 /**
- * This interface defines a factory for <code>DataContentHandlers</code>. An
- * implementation of this interface should map a MIME type into an
- * instance of DataContentHandler. The design pattern for classes implementing
- * this interface is the same as for the ContentHandler mechanism used in
- * <code>java.net.URL</code>.
+ * A class to encapsulate MimeType parsing related exceptions.
  */
-
-public interface DataContentHandlerFactory {
+public class MimeTypeParseException extends Exception {
 
     /**
-     * Creates a new DataContentHandler object for the MIME type.
-     *
-     * @param mimeType the MIME type to create the DataContentHandler for.
-     * @return The new <code>DataContentHandler</code>, or <i>null</i>
-     * if none are found.
+     * Constructs a MimeTypeParseException with no specified detail message. 
      */
-    public DataContentHandler createDataContentHandler(String mimeType);
+    public MimeTypeParseException() {
+	super();
+    }
+
+    /**
+     * Constructs a MimeTypeParseException with the specified detail message. 
+     *
+     * @param   s   the detail message.
+     */
+    public MimeTypeParseException(String s) {
+	super(s);
+    }
 }

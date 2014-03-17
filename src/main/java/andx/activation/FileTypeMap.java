@@ -38,7 +38,7 @@
  * @(#)FileTypeMap.java	1.9 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 import java.io.File;
 
@@ -53,9 +53,9 @@ import java.io.File;
  * FileDataSource class uses the default FileTypeMap (a MimetypesFileTypeMap
  * unless changed) to determine the content type of files.
  *
- * @see javax.activation.FileTypeMap
- * @see javax.activation.FileDataSource
- * @see javax.activation.MimetypesFileTypeMap
+ * @see FileTypeMap
+ * @see FileDataSource
+ * @see MimetypesFileTypeMap
  */
 
 public abstract class FileTypeMap {
@@ -120,7 +120,7 @@ public abstract class FileTypeMap {
      * <code>MimetypesFileTypeMap</code>.
      *
      * @return The default FileTypeMap
-     * @see javax.activation.FileTypeMap#setDefaultFileTypeMap
+     * @see FileTypeMap#setDefaultFileTypeMap
      */
     public static FileTypeMap getDefaultFileTypeMap() {
 	// XXX - probably should be synchronized

@@ -38,7 +38,7 @@
  * @(#)ActivationDataFlavor.java	1.16 07/07/13
  */
 
-package javax.activation;
+package andx.activation;
 
 import and.awt.datatransfer.DataFlavor;
 

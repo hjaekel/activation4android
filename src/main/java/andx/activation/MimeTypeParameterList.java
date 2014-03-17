@@ -38,7 +38,7 @@
  * @(#)MimeTypeParameterList.java	1.13 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 import java.util.Hashtable;
 import java.util.Enumeration;
@@ -49,7 +49,7 @@ import java.util.Locale;
  * as defined in RFC 2045 and 2046. The Primary type of the
  * object must already be stripped off.
  *
- * @see javax.activation.MimeType
+ * @see MimeType
  */
 public class MimeTypeParameterList {
     private Hashtable parameters;

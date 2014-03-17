@@ -34,6 +34,10 @@
 import javax.activation.*;
 
 import and.awt.datatransfer.DataFlavor;
+import andx.activation.DataContentHandlerFactory;
+import andx.activation.DataHandler;
+import andx.activation.FileDataSource;
+import andx.activation.MailcapCommandMap;
 
 public class DCHTest2 {
     private FileDataSource fds = null;

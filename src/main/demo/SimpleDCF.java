@@ -35,6 +35,9 @@ import javax.activation.*;
 import java.util.StringTokenizer;
 import java.util.Hashtable;
 
+import andx.activation.DataContentHandler;
+import andx.activation.DataContentHandlerFactory;
+
 public class SimpleDCF implements DataContentHandlerFactory {
     Hashtable entry_hash = new Hashtable();
     /**

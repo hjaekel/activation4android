@@ -38,7 +38,7 @@
  * @(#)SecuritySupport.java	1.4 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 import java.security.*;
 import java.net.*;

@@ -38,17 +38,14 @@
  * @(#)FileDataSource.java	1.10 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import com.sun.activation.registries.MimeTypeFile;
 
 /**
  * The FileDataSource class implements a simple DataSource object
@@ -64,9 +61,9 @@ import com.sun.activation.registries.MimeTypeFile;
  * FileTypeMap is set, the FileDataSource will call the FileTypeMap's
  * getDefaultFileTypeMap method to get the System's default FileTypeMap.
  *
- * @see javax.activation.DataSource
- * @see javax.activation.FileTypeMap
- * @see javax.activation.MimetypesFileTypeMap
+ * @see DataSource
+ * @see FileTypeMap
+ * @see MimetypesFileTypeMap
  */
 public class FileDataSource implements DataSource {
 
@@ -131,7 +128,7 @@ public class FileDataSource implements DataSource {
      * default, the FileTypeMap used will be a MimetypesFileTypeMap.</i>
      *
      * @return the MIME Type
-     * @see javax.activation.FileTypeMap#getDefaultFileTypeMap
+     * @see FileTypeMap#getDefaultFileTypeMap
      */
     public String getContentType() {
 	// check to see if the type map is null?
@@ -146,7 +143,7 @@ public class FileDataSource implements DataSource {
      * will return the file name of the object.
      *
      * @return the name of the object.
-     * @see javax.activation.DataSource
+     * @see DataSource
      */
     public String getName() {
 	return _file.getName();

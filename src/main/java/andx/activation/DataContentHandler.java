@@ -38,7 +38,7 @@
  * @(#)DataContentHandler.java	1.17 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 import and.awt.datatransfer.DataFlavor;
 import and.awt.datatransfer.UnsupportedFlavorException;

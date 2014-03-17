@@ -35,6 +35,8 @@ import java.net.*;
 import java.io.*;
 import javax.activation.*;
 
+import andx.activation.DataHandler;
+
 public class DHURL {
     URL url = null;
     DataHandler dh = null;

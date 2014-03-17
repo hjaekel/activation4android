@@ -31,10 +31,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.awt.*;
-import java.beans.*;
-import java.net.*;
 import javax.activation.*;
+
+import andx.activation.CommandInfo;
+import andx.activation.DataHandler;
+import andx.activation.FileDataSource;
 
 public class FileView {
     private Frame frame;
@@ -49,8 +50,8 @@ public class FileView {
     }
 
     private void view(String filename) throws Exception {
-  	FileDataSource fds = new FileDataSource(filename); 
-  	DataHandler dh = new DataHandler(fds); 
+  	FileDataSource fds = new FileDataSource(filename);
+  	DataHandler dh = new DataHandler(fds);
 	// comment out previous two lines, and uncomment next
 	// line and pass in a URL on the command line.
 	// DataHandler dh = new DataHandler(new URL(filename));

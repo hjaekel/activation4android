@@ -38,7 +38,7 @@
  * @(#)DataSource.java	1.12 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -38,7 +38,7 @@
  * @(#)MimeType.java	1.21 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 import java.io.*;
 import java.util.Locale;

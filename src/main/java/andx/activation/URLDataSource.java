@@ -38,7 +38,7 @@
  * @(#)URLDataSource.java	1.11 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -54,8 +54,8 @@ import java.io.IOException;
  * DataHandler object creates a URLDataSource internally,
  * when it is constructed with a URL.</i>
  *
- * @see javax.activation.DataSource
- * @see javax.activation.DataHandler
+ * @see DataSource
+ * @see DataHandler
  */
 public class URLDataSource implements DataSource {
     private URL url = null;

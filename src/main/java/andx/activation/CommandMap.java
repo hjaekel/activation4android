@@ -38,7 +38,7 @@
  * @(#)CommandMap.java	1.20 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 
 /**

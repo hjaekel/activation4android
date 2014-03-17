@@ -35,33 +35,36 @@
  */
 
 /*
- * @(#)CommandObject.java	1.10 07/05/14
+ * @(#)UnsupportedDataTypeException.java	1.10 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 import java.io.IOException;
 
 /**
- * JavaBeans components that are Activation Framework aware implement
- * this interface to find out which command verb they're being asked
- * to perform, and to obtain the DataHandler representing the
- * data they should operate on.  JavaBeans that don't implement
- * this interface may be used as well.  Such commands may obtain
- * the data using the Externalizable interface, or using an
- * application-specific method.<p>
+ * Signals that the requested operation does not support the
+ * requested data type.
+ *
+ * @see DataHandler
  */
-public interface CommandObject {
+
+public class UnsupportedDataTypeException extends IOException {
+    /**
+     * Constructs an UnsupportedDataTypeException with no detail
+     * message.
+     */
+    public UnsupportedDataTypeException() {
+	super();
+    }
 
     /**
-     * Initialize the Command with the verb it is requested to handle
-     * and the DataHandler that describes the data it will
-     * operate on. <b>NOTE:</b> it is acceptable for the caller
-     * to pass <i>null</i> as the value for <code>DataHandler</code>.
-     *
-     * @param verb The Command Verb this object refers to.
-     * @param dh The DataHandler.
+     * Constructs an UnsupportedDataTypeException with the specified 
+     * message.
+     * 
+     * @param s The detail message.
      */
-    public void setCommandContext(String verb, DataHandler dh)
-						throws IOException;
+    public UnsupportedDataTypeException(String s) {
+	super(s);
+    }
 }

@@ -34,6 +34,9 @@
 import javax.activation.*;
 
 import and.awt.datatransfer.DataFlavor;
+import andx.activation.DataContentHandlerFactory;
+import andx.activation.DataHandler;
+import andx.activation.FileDataSource;
 
 public class ODCHTest {
     private FileDataSource fds = null;

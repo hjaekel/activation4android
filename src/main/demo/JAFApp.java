@@ -31,11 +31,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.awt.*;
 import java.awt.event.*;
-import java.beans.*;
 import java.io.*;
 import javax.activation.*;
+
+import andx.activation.CommandInfo;
+import andx.activation.CommandMap;
+import andx.activation.DataHandler;
+import andx.activation.FileDataSource;
+import andx.activation.FileTypeMap;
+import andx.activation.MailcapCommandMap;
+import andx.activation.MimetypesFileTypeMap;
 
 public class JAFApp extends Frame implements WindowListener, ItemListener, ActionListener {
 
@@ -221,8 +227,8 @@ public class JAFApp extends Frame implements WindowListener, ItemListener, Actio
 	{
 	    _file = file;
 	    int i;
-	    MailcapCommandMap cmdmap = 
-		(MailcapCommandMap)CommandMap.getDefaultCommandMap();
+	    MailcapCommandMap cmdmap =
+		(MailcapCommandMap) CommandMap.getDefaultCommandMap();
 	    cmdmap.addMailcap("application/x-int;      jaf.viewers.IntViewer");
 
 	    if(_file.isFile())
@@ -297,7 +303,7 @@ public class JAFApp extends Frame implements WindowListener, ItemListener, Actio
 		    
 			    // if it isn't a CommandObject we still
 			    // have to give it it's data...
-// 			    if(!(my_bean instanceof javax.activation.CommandObject))
+// 			    if(!(my_bean instanceof CommandObject))
 // 				{
 // 				    System.out.println("WHOOOAAA!");
 // 				    if(my_bean instanceof 

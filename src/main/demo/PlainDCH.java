@@ -32,6 +32,10 @@
  */
 import java.io.*;
 import and.awt.datatransfer.DataFlavor;
+import andx.activation.ActivationDataFlavor;
+import andx.activation.DataContentHandler;
+import andx.activation.DataSource;
+
 import javax.activation.*;
 
 

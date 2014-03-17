@@ -35,29 +35,33 @@
  */
 
 /*
- * @(#)MimeTypeParseException.java	1.7 07/05/14
+ * @(#)CommandObject.java	1.10 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
+
+import java.io.IOException;
 
 /**
- * A class to encapsulate MimeType parsing related exceptions.
+ * JavaBeans components that are Activation Framework aware implement
+ * this interface to find out which command verb they're being asked
+ * to perform, and to obtain the DataHandler representing the
+ * data they should operate on.  JavaBeans that don't implement
+ * this interface may be used as well.  Such commands may obtain
+ * the data using the Externalizable interface, or using an
+ * application-specific method.<p>
  */
-public class MimeTypeParseException extends Exception {
+public interface CommandObject {
 
     /**
-     * Constructs a MimeTypeParseException with no specified detail message. 
-     */
-    public MimeTypeParseException() {
-	super();
-    }
-
-    /**
-     * Constructs a MimeTypeParseException with the specified detail message. 
+     * Initialize the Command with the verb it is requested to handle
+     * and the DataHandler that describes the data it will
+     * operate on. <b>NOTE:</b> it is acceptable for the caller
+     * to pass <i>null</i> as the value for <code>DataHandler</code>.
      *
-     * @param   s   the detail message.
+     * @param verb The Command Verb this object refers to.
+     * @param dh The DataHandler.
      */
-    public MimeTypeParseException(String s) {
-	super(s);
-    }
+    public void setCommandContext(String verb, DataHandler dh)
+						throws IOException;
 }

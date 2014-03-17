@@ -39,7 +39,7 @@
  */
 
 
-package javax.activation;
+package andx.activation;
 
 import java.util.*;
 import java.io.*;

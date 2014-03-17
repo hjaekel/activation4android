@@ -38,7 +38,7 @@
  * @(#)CommandInfo.java	1.12 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 import java.io.*;
 import java.beans.Beans;
@@ -100,7 +100,7 @@ public class CommandInfo {
      * Begin by instantiating the component with
      * <code>Beans.instantiate()</code>.
      * <p>
-     * If the bean implements the <code>javax.activation.CommandObject</code>
+     * If the bean implements the <code>CommandObject</code>
      * interface, call its <code>setCommandContext</code> method.
      * <p>
      * If the DataHandler parameter is null, then the bean is
@@ -122,7 +122,7 @@ public class CommandInfo {
      * @param loader	The ClassLoader to be used to instantiate the bean.
      * @return The bean
      * @see java.beans.Beans#instantiate
-     * @see javax.activation.CommandObject
+     * @see CommandObject
      */
     public Object getCommandObject(DataHandler dh, ClassLoader loader)
 			throws IOException, ClassNotFoundException {

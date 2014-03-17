@@ -38,7 +38,7 @@
  * @(#)DataHandler.java	1.41 07/05/14
  */
 
-package javax.activation;
+package andx.activation;
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -81,10 +81,10 @@ import and.awt.datatransfer.UnsupportedFlavorException;
  * The current DataHandler implementation creates a private
  * instance of URLDataSource when it is constructed with a URL.
  *
- * @see javax.activation.CommandMap
- * @see javax.activation.DataContentHandler
- * @see javax.activation.DataSource
- * @see javax.activation.URLDataSource
+ * @see CommandMap
+ * @see DataContentHandler
+ * @see DataSource
+ * @see URLDataSource
  */
 
 public class DataHandler implements Transferable {
@@ -241,8 +241,8 @@ public class DataHandler implements Transferable {
      * @return	the InputStream representing this data
      * @exception IOException	if an I/O error occurs
      *
-     * @see javax.activation.DataContentHandler#writeTo
-     * @see javax.activation.UnsupportedDataTypeException
+     * @see DataContentHandler#writeTo
+     * @see UnsupportedDataTypeException
      */
     public InputStream getInputStream() throws IOException {
 	InputStream ins = null;
@@ -340,8 +340,8 @@ public class DataHandler implements Transferable {
      *
      * @return the OutputStream
      *
-     * @see javax.activation.DataSource#getOutputStream
-     * @see javax.activation.URLDataSource
+     * @see DataSource#getOutputStream
+     * @see URLDataSource
      */
     public OutputStream getOutputStream() throws IOException {
 	if (dataSource != null)
@@ -372,7 +372,7 @@ public class DataHandler implements Transferable {
      * this object's MIME type and the object's class.
      *
      * @return	an array of data flavors in which this data can be transferred
-     * @see javax.activation.DataContentHandler#getTransferDataFlavors
+     * @see DataContentHandler#getTransferDataFlavors
      */
     public synchronized DataFlavor[] getTransferDataFlavors() {
 	if (factory != oldFactory) // if the factory has changed, clear cache
@@ -394,7 +394,7 @@ public class DataHandler implements Transferable {
      *
      * @param flavor	the requested flavor for the data
      * @return		true if the data flavor is supported
-     * @see javax.activation.DataHandler#getTransferDataFlavors
+     * @see DataHandler#getTransferDataFlavors
      */
     public boolean isDataFlavorSupported(DataFlavor flavor) {
 	DataFlavor[] lFlavors = getTransferDataFlavors();
@@ -437,7 +437,7 @@ public class DataHandler implements Transferable {
      * @exception UnsupportedFlavorException	if the data could not be
      *			converted to the requested flavor
      * @exception IOException	if an I/O error occurs
-     * @see javax.activation.ActivationDataFlavor
+     * @see ActivationDataFlavor
      */
     public Object getTransferData(DataFlavor flavor)
 				throws UnsupportedFlavorException, IOException {
@@ -454,7 +454,7 @@ public class DataHandler implements Transferable {
      *
      * @param commandMap	the CommandMap to use in this DataHandler
      *
-     * @see javax.activation.CommandMap#setDefaultCommandMap
+     * @see CommandMap#setDefaultCommandMap
      */
     public synchronized void setCommandMap(CommandMap commandMap) {
 	if (commandMap != currentCommandMap || commandMap == null) {
@@ -477,7 +477,7 @@ public class DataHandler implements Transferable {
      *
      * @return	the CommandInfo objects representing the preferred commands
      *
-     * @see javax.activation.CommandMap#getPreferredCommands
+     * @see CommandMap#getPreferredCommands
      */
     public CommandInfo[] getPreferredCommands() {
 	if (dataSource != null)
@@ -497,7 +497,7 @@ public class DataHandler implements Transferable {
      *
      * @return	the CommandInfo objects representing all the commands
      *
-     * @see javax.activation.CommandMap#getAllCommands
+     * @see CommandMap#getAllCommands
      */
     public CommandInfo[] getAllCommands() {
 	if (dataSource != null)
@@ -516,7 +516,7 @@ public class DataHandler implements Transferable {
      * @param cmdName	the command name
      * @return	the CommandInfo corresponding to the command
      *
-     * @see javax.activation.CommandMap#getCommand
+     * @see CommandMap#getCommand
      */
     public CommandInfo getCommand(String cmdName) {
 	if (dataSource != null)
@@ -557,7 +557,7 @@ public class DataHandler implements Transferable {
      * <p>
      * This method calls the CommandInfo's <code>getCommandObject</code>
      * method with the <code>ClassLoader</code> used to load
-     * the <code>javax.activation.DataHandler</code> class itself.
+     * the <code>DataHandler</code> class itself.
      *
      * @param cmdinfo	the CommandInfo corresponding to a command
      * @return	the instantiated command object
@@ -668,7 +668,7 @@ public class DataHandler implements Transferable {
      * @param newFactory	the DataContentHandlerFactory
      * @exception Error	if the factory has already been defined.
      *
-     * @see javax.activation.DataContentHandlerFactory
+     * @see DataContentHandlerFactory
      */
     public static synchronized void setDataContentHandlerFactory(
 					 DataContentHandlerFactory newFactory) {
